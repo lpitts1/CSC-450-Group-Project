@@ -1,3 +1,7 @@
+# type this command into the pycharm terminal to recompile changes made in QT designer and run the python program
+# pyuic6 -x ProjectUI.ui -o ProjectUI.py
+
+
 # Form implementation generated from reading ui file 'ProjectUI.ui'
 #
 # Created by: PyQt6 UI code generator 6.9.0
