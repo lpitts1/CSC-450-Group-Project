@@ -81,16 +81,20 @@ class Ui_MainWindow(object):
         self.frame_4.setObjectName("frame_4")
         self.cardFrontText = QtWidgets.QTextEdit(parent=self.frame_4)
         self.cardFrontText.setGeometry(QtCore.QRect(0, 20, 250, 210))
+
         self.cardFrontText.setObjectName("cardFrontText")
         self.cardBackText = QtWidgets.QTextEdit(parent=self.frame_4)
         self.cardBackText.setGeometry(QtCore.QRect(280, 20, 250, 210))
         self.cardBackText.setObjectName("cardBackText")
+
         self.frontLabel = QtWidgets.QLabel(parent=self.frame_4)
-        self.frontLabel.setGeometry(QtCore.QRect(100, 0, 31, 20))
+        self.frontLabel.setGeometry(QtCore.QRect(100, 0, 50, 20))
         self.frontLabel.setObjectName("frontLabel")
+
         self.backLabel = QtWidgets.QLabel(parent=self.frame_4)
-        self.backLabel.setGeometry(QtCore.QRect(400, 0, 31, 16))
+        self.backLabel.setGeometry(QtCore.QRect(400, 0, 50, 20))
         self.backLabel.setObjectName("backLabel")
+
         self.tabWidget.addTab(self.cardEditTab, "")
 
         self.overviewTab = QtWidgets.QWidget()
@@ -119,7 +123,7 @@ class Ui_MainWindow(object):
         self.notesText.setLineWrapColumnOrWidth(0)
         self.notesText.setObjectName("notesText")
         self.frame_3 = QtWidgets.QFrame(parent=self.notesTab)
-        self.frame_3.setGeometry(QtCore.QRect(530, 190, 101, 101))
+        self.frame_3.setGeometry(QtCore.QRect(510, 190, 150, 100))
         self.frame_3.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_3.setObjectName("frame_3")
@@ -140,7 +144,7 @@ class Ui_MainWindow(object):
         self.saveNotesButton.clicked.connect(self.notes_save_button_clicked)
 
         self.notesSelect = QtWidgets.QComboBox(parent=self.notesTab)
-        self.notesSelect.setGeometry(QtCore.QRect(532, 0, 81, 31))
+        self.notesSelect.setGeometry(QtCore.QRect(510, 0, 120, 30))
         self.notesSelect.setObjectName("notesSelect")
         self.notesSelect.addItem("")
         self.notesSelect.addItem("")
