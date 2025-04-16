@@ -5,37 +5,31 @@
 
 # Read file function, reads entire file with fileName
 def readFromFile(fileName):
-    # Open file in read mode
-    with open(fileName) as file:
-        # Set variable that contains read info
-        content = file.read()
+    with open(fileName) as file: # Open file in read mode
+        content = file.read()    # Set variable that contains read info
         print("File read and stored successfully")
-        # Return read info
-        return content
+        return content           # Return read info
 
 # Read file by line function, reads one line of file with fileName
 def readByLine(fileName):
-    # Open file in read mode
-    with open(fileName) as file:
-        # Read one line of file, return line
-        line = file.readline()
-        return line
+    lineList = []                     # List of lines for storing
+    with open(fileName) as file:      # Open file in read mode
+        while True:
+            line = file.readline()    # Read one line of file, return line
+            lineList.append(line)     # Add to lineList
+            if not line:              # Exception if end of file
+                break
+    return lineList
 
 # Create file function with desired file name
 def newFile(fileName):
-    # Creates a file with exception handling
-    try:
-        # Open file in X mode, opens file in write mode but throws
-        # FileExistsError if file name already exists
-        f = open(fileName, "x")
-        f.close()
-    # Throw excpetion
-    except FileExistsError:
+    try:                        # Creates a file with exception handling
+        f = open(fileName, "x") # Open file in X mode, opens file in write mode but throws
+        f.close()               # FileExistsError if file name already exists
+    except FileExistsError:     # Throw excpetion
         print("File already exists.")
 
 # Write to file function, takes in fileName and input arguments
 def writeToFile(input, fileName):
-    # Open file in Write mode
-    with open(fileName, 'w') as file:
-        # Write input to file
-        file.write(input)
+    with open(fileName, 'w') as file:     # Open file in Write mode
+        file.write(input)                 # Write input to file
