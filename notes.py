@@ -3,6 +3,11 @@
 # CSC450-002
 # Professor Devon Simmonds
 # Notes class
+
+
+import readWrite
+
+
 class Notes:
     def __init__(self, title, body="LOAD"):
         """
@@ -12,13 +17,12 @@ class Notes:
                             contents will be the body
         """
         self.title = title
-        if body == "LOAD":              # the default value of the body parameter
-            file = open(title+".txt")   # open a textfile with a name equal to the title passed
-            file.readline()             # first line says "can(not) be read as a deck"
+        if body == "LOAD":                  # the default value of the body parameter
+            file = readWrite.readByLine(f"{title}.txt")   # open a textfile with a name equal to the title passed
 
             # populate the body with the contents of the text file
             self.body = ""
-            for line in file:
+            for line in file[1:]:
                 self.body += line
 
         else:
@@ -55,12 +59,13 @@ class Notes:
         save the note to a text file
         :return: NoneType
         """
-        file = open(self.title+".txt", 'w')
-
-        # a header indicating whether it can be read as a deck or not
-        file.write("can be read as a deck\n" if self.__is_valid_deck() else "cannot be read as a deck\n")
-
-        file.write(self.body)
+        # save the note to a file with a name equal to the title
+        # the first line of the file will be whether the document can be read as a card or not
+        # the remainder of the file will be the notes body
+        readWrite.writeToFile(
+            f"can{"" if self.__is_valid_deck() else "not"} be read as a valid deck\n{self.body}",
+            f"{self.title}.txt"
+        )
 
     def __str__(self):
         return self.body
@@ -69,7 +74,7 @@ class Notes:
 def main():
     notes = Notes("Math", """1+1: 2
 2+2: 4
-3+3""")
+3+3: 6""")
 
     print(notes)
     notes.store()
