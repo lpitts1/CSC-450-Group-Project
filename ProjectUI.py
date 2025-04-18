@@ -11,6 +11,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
     NOTE_DOCUMENT_INDEX = 0
+    DECK_INDEX = 0
 
     def setupUi(self, MainWindow):
         defaultWindowWidth, defaultWindowHeight = 640,360 # x3 = 1920:1080 --- x0.75 = 480:270
@@ -34,55 +35,76 @@ class Ui_MainWindow(object):
 
         self.cardEditTab = QtWidgets.QWidget()
         self.cardEditTab.setObjectName("cardEditTab")
+
         self.frame = QtWidgets.QFrame(parent=self.cardEditTab)
-        self.frame.setGeometry(QtCore.QRect(210, 270, 151, 31))
+        self.frame.setGeometry(QtCore.QRect(210, 240, 150, 50))
         self.frame.setAutoFillBackground(False)
         self.frame.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
         self.frame.setObjectName("frame")
+
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.frame)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.backButton = QtWidgets.QPushButton(parent=self.frame)
         self.backButton.setObjectName("backButton")
         self.horizontalLayout.addWidget(self.backButton)
+
+        self.backButton.clicked.connect(self.back_button_clicked)
+
         self.deckIndex = QtWidgets.QLabel(parent=self.frame)
         self.deckIndex.setFrameShape(QtWidgets.QFrame.Shape.Box)
         self.deckIndex.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         self.deckIndex.setObjectName("deckIndex")
         self.horizontalLayout.addWidget(self.deckIndex)
+
         self.forwardButton = QtWidgets.QPushButton(parent=self.frame)
         self.forwardButton.setObjectName("forwardButton")
         self.horizontalLayout.addWidget(self.forwardButton)
+
+        self.forwardButton.clicked.connect(self.forward_button_clicked)
+
         self.deckSelectCE = QtWidgets.QComboBox(parent=self.cardEditTab)
         self.deckSelectCE.setGeometry(QtCore.QRect(260, 0, 53, 22))
         self.deckSelectCE.setObjectName("deckSelectCE")
         self.deckSelectCE.addItem("")
         self.deckSelectCE.addItem("")
+
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
-        self.frame_2.setGeometry(QtCore.QRect(560, 200, 71, 101))
+        self.frame_2.setGeometry(QtCore.QRect(550, 120, 90, 90))
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_2.setObjectName("frame_2")
+
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame_2)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+
         self.newDeckCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newDeckCEButton.setObjectName("newDeckCEButton")
         self.verticalLayout_2.addWidget(self.newDeckCEButton)
+        self.newDeckCEButton.clicked.connect(self.new_deck_button_clicked)
+
+
+
         self.newCardCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newCardCEButton.setObjectName("newCardCEButton")
         self.verticalLayout_2.addWidget(self.newCardCEButton)
+
         self.saveCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.saveCEButton.setObjectName("saveCEButton")
         self.verticalLayout_2.addWidget(self.saveCEButton)
+
+        self.saveCEButton.clicked.connect(self.CE_save_button_clicked)
+
         self.frame_4 = QtWidgets.QFrame(parent=self.cardEditTab)
-        self.frame_4.setGeometry(QtCore.QRect(19, 39, 530, 230))
+        self.frame_4.setGeometry(QtCore.QRect(15, 15, 530, 230))
         self.frame_4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_4.setObjectName("frame_4")
+
         self.cardFrontText = QtWidgets.QTextEdit(parent=self.frame_4)
         self.cardFrontText.setGeometry(QtCore.QRect(0, 20, 250, 210))
-
         self.cardFrontText.setObjectName("cardFrontText")
+
         self.cardBackText = QtWidgets.QTextEdit(parent=self.frame_4)
         self.cardBackText.setGeometry(QtCore.QRect(280, 20, 250, 210))
         self.cardBackText.setObjectName("cardBackText")
@@ -99,29 +121,36 @@ class Ui_MainWindow(object):
 
         self.overviewTab = QtWidgets.QWidget()
         self.overviewTab.setObjectName("overviewTab")
+
         self.frame_5 = QtWidgets.QFrame(parent=self.overviewTab)
         self.frame_5.setGeometry(QtCore.QRect(230, 0, 141, 41))
         self.frame_5.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_5.setObjectName("frame_5")
+
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.frame_5)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+
         self.currentSetLabel = QtWidgets.QLabel(parent=self.frame_5)
         self.currentSetLabel.setObjectName("currentSetLabel")
         self.horizontalLayout_2.addWidget(self.currentSetLabel)
+
         self.deckSelectOverview = QtWidgets.QComboBox(parent=self.frame_5)
         self.deckSelectOverview.setObjectName("deckSelectOverview")
         self.deckSelectOverview.addItem("")
         self.deckSelectOverview.addItem("")
         self.horizontalLayout_2.addWidget(self.deckSelectOverview)
+
         self.tabWidget.addTab(self.overviewTab, "")
 
         self.notesTab = QtWidgets.QWidget()
         self.notesTab.setObjectName("notesTab")
+
         self.notesText = QtWidgets.QTextEdit(parent=self.notesTab)
-        self.notesText.setGeometry(QtCore.QRect(0, 0, 501, 291))
+        self.notesText.setGeometry(QtCore.QRect(0, 0, int(defaultWindowWidth*.7), int(defaultWindowHeight*.75)))
         self.notesText.setLineWrapColumnOrWidth(0)
         self.notesText.setObjectName("notesText")
+
         self.frame_3 = QtWidgets.QFrame(parent=self.notesTab)
         self.frame_3.setGeometry(QtCore.QRect(510, 190, 150, 100))
         self.frame_3.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
@@ -152,28 +181,34 @@ class Ui_MainWindow(object):
 
         self.studySessionTab = QtWidgets.QWidget()
         self.studySessionTab.setObjectName("studySessionTab")
+
         self.currentNoteCardSS = QtWidgets.QTextEdit(parent=self.studySessionTab)
         self.currentNoteCardSS.setGeometry(QtCore.QRect(190, 40, 250, 210))
         self.currentNoteCardSS.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.NoTextInteraction)
         self.currentNoteCardSS.setObjectName("currentNoteCardSS")
+
         self.frame_6 = QtWidgets.QFrame(parent=self.studySessionTab)
         self.frame_6.setGeometry(QtCore.QRect(240, 0, 141, 41))
         self.frame_6.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_6.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_6.setObjectName("frame_6")
+
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.frame_6)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.currentSetLabel_2 = QtWidgets.QLabel(parent=self.frame_6)
         self.currentSetLabel_2.setObjectName("currentSetLabel_2")
         self.horizontalLayout_3.addWidget(self.currentSetLabel_2)
+
         self.deckSelectSS = QtWidgets.QComboBox(parent=self.frame_6)
         self.deckSelectSS.setObjectName("deckSelectSS")
         self.deckSelectSS.addItem("")
         self.deckSelectSS.addItem("")
         self.horizontalLayout_3.addWidget(self.deckSelectSS)
+
         self.flipCardButton = QtWidgets.QPushButton(parent=self.studySessionTab)
-        self.flipCardButton.setGeometry(QtCore.QRect(280, 260, 71, 31))
+        self.flipCardButton.setGeometry(QtCore.QRect(500, 200, 100, 50))
         self.flipCardButton.setObjectName("flipCardButton")
+
         self.tabWidget.addTab(self.studySessionTab, "")
         self.verticalLayout.addWidget(self.tabWidget)
 
@@ -223,10 +258,16 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
+
     #save the contents of the notes text field (notesText)
     def notes_save_button_clicked(self):
         print(self.notesSelect.currentText()) # this shows what notes document user is currently on
         print(self.notesText.toPlainText()) # shows contents of notes document
+
+    def CE_save_button_clicked(self):
+        print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
+        print(self.cardFrontText.toPlainText()) # shows contents of front of card
+        print(self.cardBackText.toPlainText()) # shows contents of back of card
 
     #add a new item to the notes select dropdown box
     #allow user to change the name of document and switch between notes
@@ -235,6 +276,17 @@ class Ui_MainWindow(object):
         self.notesSelect.addItem("")
         self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_"+str(self.NOTE_DOCUMENT_INDEX)) #sets drop down index and example title
 
+    def new_deck_button_clicked(self):
+        self.DECK_INDEX += 1 #increments by 1 for each new deck added
+        self.deckSelectCE.addItem("")
+        self.deckSelectCE.setItemText(self.DECK_INDEX, "deck_"+str(self.DECK_INDEX)) #sets drop down index and example title
+
+    def new_card_button_clicked(self):
+        pass
+    def back_button_clicked(self):
+        print("back")
+    def forward_button_clicked(self):
+        print("forward")
 
 if __name__ == "__main__":
     import sys
