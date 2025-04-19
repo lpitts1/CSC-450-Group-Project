@@ -69,7 +69,7 @@ class Ui_MainWindow(object):
         self.forwardButton.clicked.connect(self.forward_button_clicked)
 
         self.deckSelectCE = QtWidgets.QComboBox(parent=self.cardEditTab)
-        self.deckSelectCE.setGeometry(QtCore.QRect(260, 0, 53, 22))
+        self.deckSelectCE.setGeometry(QtCore.QRect(255, 5, 70, 25))
         self.deckSelectCE.setObjectName("deckSelectCE")
         self.deckSelectCE.addItem("")
 
@@ -179,7 +179,7 @@ class Ui_MainWindow(object):
         self.saveNotesButton.clicked.connect(self.notes_save_button_clicked)
 
         self.notesSelect = QtWidgets.QComboBox(parent=self.notesTab)
-        self.notesSelect.setGeometry(QtCore.QRect(510, 0, 120, 30))
+        self.notesSelect.setGeometry(QtCore.QRect(510, 0, 120, 25))
         self.notesSelect.setObjectName("notesSelect")
         self.notesSelect.addItem("")
         self.tabWidget.addTab(self.notesTab, "")
@@ -260,6 +260,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
+    # updates the contents in the card index label in the card edit tab
+    def update_index_label(self):
+        self.deckIndex.setText(str(self.CURRENT_CARD_INDEX) + "/" + str(self.CARDS_IN_DECK))
 
     #save the contents of the notes text field (notesText)
     def notes_save_button_clicked(self):
@@ -283,14 +286,32 @@ class Ui_MainWindow(object):
         self.deckSelectCE.addItem("")
         self.deckSelectCE.setItemText(self.DECK_INDEX, "deck_"+str(self.DECK_INDEX)) #sets drop down index and example title
 
+    # this method increments the number of cards in a deck and updates the label
     def new_card_button_clicked(self):
         print("saved card")
         self.CARDS_IN_DECK += 1
         print(self.CARDS_IN_DECK)
+        # label update
+        self.update_index_label()
+
+    # this decrements the current card and loops around to the last card in the deeck
     def back_button_clicked(self):
         print("back")
+        self.CURRENT_CARD_INDEX -= 1
+        if self.CURRENT_CARD_INDEX < 1:
+            self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
+        #label update
+        self.update_index_label()
+
+    # this increments the current card and loops around to the first card in the deck
+    # this increments the current card and loops around to the first card in the deckec
     def forward_button_clicked(self):
         print("forward")
+        self.CURRENT_CARD_INDEX += 1
+        if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
+            self.CURRENT_CARD_INDEX = 1
+        #label update
+        self.update_index_label()
 
 if __name__ == "__main__":
     import sys
