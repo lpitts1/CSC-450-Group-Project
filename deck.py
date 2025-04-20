@@ -1,3 +1,6 @@
+
+
+
 import random                    # made random global
 import card as card_class
 import readWrite
@@ -5,29 +8,30 @@ import readWrite
 
 class Deck:
     def __init__(self, title="Untitled Deck"):
+        """
+        :param title: if it has a .txt extension, tries to read in a file of that name, otherwise makes a new deck
+        :type title: str
+        """
         print("Instantiating a deck.")
         self.__cards = []   # made attributes private
 
         # case 1: the user passes a text file to be read in as the title
         try:
-            print("Checking if textfile name passed.")
             Deck.readable_as_deck(title)
-            print("Textfile name passed. Parsing the file.")
-            lines = readWrite.readByLine(title)[1:-1]     # first line is the deck flag
-            print("File parsed. Parsing individual lines.")
+            lines = readWrite.readByLine(title)[1:-1]        # first line is the deck flag
             # code below only executes if the title was successfully read as a text file
-            self.__title = title[:-4]   # i.e., the filename minus the extension
+            self.__title = title[:-4]                        # i.e., the filename minus the extension
             for i in range(len(lines)):
-                print(f"Parsing line {i+1}")
-                front, back = lines[i].split(":")
+                front, back = lines[i].split(":")            # convert each line of plain text to a card
                 card = card_class.Card(front, back)
                 self.add_card(card)
-                print(f"Successfully read in {front} | {back}")
 
         # case 2: the user is making a new deck and passes the title they want it to have
         except FileNotFoundError:
-            print("A textfile name was not passed or an error occurred.")
             self.__title = title
+
+    def __len__(self):
+        return len(self.__cards)
 
     def add_card(self, card):
         self.__cards.append(card)
@@ -52,17 +56,32 @@ class Deck:
         self.__cards[index].set_front(front)
         self.__cards[index].set_back(back)
 
+    def get_title(self):
+        return self.__title
+
+    def set_title(self, title):
+        self.__title = title
+
     # static method to see if a text file can be read as a deck
     @staticmethod
     def readable_as_deck(filename):
-        lines = readWrite.readByLine(filename)
-        first_line = lines[0]
-        if first_line != "can be read as a valid deck\n":
+        """
+        :type filename: str
+        :rtype: NoneType
+        :raises: FileNotFoundError
+        """
+        lines = readWrite.readByLine(filename)                                      # lst[str]
+        first_line = lines[0]                                                       # str
+        if first_line != "can be read as a valid deck\n":                           # raise an exception of no flag
             raise FileNotFoundError(f"No such deck file: '{filename}'")
 
     def store(self):
-        content = "can be read as a valid deck\n"
-        for i in range(len(self.__cards)):
+        """
+        Writes deck to text file title.txt.
+        """
+        content = "can be read as a valid deck\n"                                   # str
+        # each card becomes a line in the text file, front:back
+        for i in range(len(self.__cards)):                                          # int
             content += f"{self.__cards[i].get_front}:{self.__cards[i].get_back}"
         readWrite.writeToFile(content, f"{self.__title}.txt")
 
