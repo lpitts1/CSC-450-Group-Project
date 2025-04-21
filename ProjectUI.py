@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         self.deckSelectCE.addItem("")
 
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
-        self.frame_2.setGeometry(QtCore.QRect(550, 120, 90, 90))
+        self.frame_2.setGeometry(QtCore.QRect(550, 50, 100, 200))
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_2.setObjectName("frame_2")
@@ -88,13 +88,23 @@ class Ui_MainWindow(object):
 
         self.newDeckCEButton.clicked.connect(self.new_deck_button_clicked)
 
-
-
         self.newCardCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newCardCEButton.setObjectName("newCardCEButton")
         self.verticalLayout_2.addWidget(self.newCardCEButton)
 
         self.newCardCEButton.clicked.connect(self.new_card_button_clicked)
+
+        self.deleteDeckButton = QtWidgets.QPushButton(parent=self.frame_2)
+        self.deleteDeckButton.setObjectName("deleteDeckButton")
+        self.verticalLayout_2.addWidget(self.deleteDeckButton)
+        # delete deck button
+        self.deleteDeckButton.clicked.connect(self.delete_deck_button_clicked)
+
+        self.deleteCardButton = QtWidgets.QPushButton(parent=self.frame_2)
+        self.deleteCardButton.setObjectName("deleteCardButton")
+        self.verticalLayout_2.addWidget(self.deleteCardButton)
+        # delete card button
+        self.deleteCardButton.clicked.connect(self.delete_card_button_clicked)
 
         self.saveCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.saveCEButton.setObjectName("saveCEButton")
@@ -158,7 +168,7 @@ class Ui_MainWindow(object):
         self.notesText.setObjectName("notesText")
 
         self.frame_3 = QtWidgets.QFrame(parent=self.notesTab)
-        self.frame_3.setGeometry(QtCore.QRect(510, 190, 150, 100))
+        self.frame_3.setGeometry(QtCore.QRect(510, 150, 150, 150))
         self.frame_3.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_3.setObjectName("frame_3")
@@ -171,6 +181,11 @@ class Ui_MainWindow(object):
         # new notes document button
         self.newDocumentButton.clicked.connect(self.new_document_button_clicked)
 
+        self.deleteNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
+        self.deleteNotesButton.setObjectName("deleteNotesButton")
+        self.verticalLayout_3.addWidget(self.deleteNotesButton)
+        # delete button for the notes tab
+        self.deleteNotesButton.clicked.connect(self.delete_notes_button_clicked)
 
         self.saveNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.saveNotesButton.setObjectName("saveNotesButton")
@@ -250,6 +265,9 @@ class Ui_MainWindow(object):
         self.deckSelectOverview.setItemText(0, _translate("MainWindow", "deck1_t"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.overviewTab), _translate("MainWindow", "Overview"))
         self.newDocumentButton.setText(_translate("MainWindow", "+New Document"))
+        self.deleteNotesButton.setText(_translate("MainWindow", "-Delete Document"))
+        self.deleteDeckButton.setText(_translate("MainWindow", "-Delete Deck"))
+        self.deleteCardButton.setText(_translate("MainWindow", "-Delete Card"))
         self.saveNotesButton.setText(_translate("MainWindow", "Save"))
         self.notesSelect.setCurrentText(_translate("MainWindow", "notes_example"))
         self.notesSelect.setItemText(0, _translate("MainWindow", "notes_example"))
@@ -311,6 +329,20 @@ class Ui_MainWindow(object):
         if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
             self.CURRENT_CARD_INDEX = 1
         #label update
+        self.update_index_label()
+
+    def delete_notes_button_clicked(self):
+        print("Notes deleted")
+    def delete_deck_button_clicked(self):
+        print("Deck deleted")
+        #self.deckSelectCE.removeItem("")
+    def delete_card_button_clicked(self):
+        print("Card deleted")
+        self.CARDS_IN_DECK -= 1
+        if self.CARDS_IN_DECK == 0:
+            self.CARDS_IN_DECK += 1
+        if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
+            self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
         self.update_index_label()
 
 if __name__ == "__main__":
