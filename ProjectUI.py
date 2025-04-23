@@ -8,6 +8,53 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+class SecondaryWindow(QtWidgets.QWidget):
+    def setupUi(self, secondaryWindow):
+        secondaryWindow.setObjectName("secondaryWindow")
+        secondaryWindow.resize(300, 150)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(secondaryWindow.sizePolicy().hasHeightForWidth())
+        secondaryWindow.setSizePolicy(sizePolicy)
+        self.centralwidget = QtWidgets.QWidget(parent=secondaryWindow)
+        self.centralwidget.setObjectName("centralwidget")
+
+        self.nameItemLabel = QtWidgets.QLabel(parent=self.centralwidget)
+        self.nameItemLabel.setGeometry(QtCore.QRect(110, 30, 100, 20))
+        self.nameItemLabel.setStyleSheet("font-size: 12pt;")
+        self.nameItemLabel.setObjectName("nameItemLabel")
+
+        self.plainTextEdit = QtWidgets.QPlainTextEdit(parent=self.centralwidget)
+        self.plainTextEdit.setGeometry(QtCore.QRect(30, 60, 240, 30))
+        self.plainTextEdit.setObjectName("plainTextEdit")
+
+        self.confirmNameButton = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.confirmNameButton.setGeometry(QtCore.QRect(120, 100, 60, 20))
+        self.confirmNameButton.setObjectName("confirmNameButton")
+
+        #button is calling a test method defined in main window, for future ref
+        self.confirmNameButton.clicked.connect(Ui_MainWindow.testMethod)
+
+
+        secondaryWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(parent=secondaryWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 20))
+        self.menubar.setObjectName("menubar")
+        secondaryWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(parent=secondaryWindow)
+        self.statusbar.setObjectName("statusbar")
+        secondaryWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(secondaryWindow)
+        QtCore.QMetaObject.connectSlotsByName(secondaryWindow)
+
+    def retranslateUi(self, secondaryWindow):
+        _translate = QtCore.QCoreApplication.translate
+        secondaryWindow.setWindowTitle(_translate("secondaryWindow", "MainWindow"))
+        self.confirmNameButton.setText(_translate("secondaryWindow", "Enter"))
+        self.nameItemLabel.setText(_translate("secondaryWindow", "Name item :"))
+
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
     NOTE_DOCUMENT_INDEX = 0
@@ -74,7 +121,7 @@ class Ui_MainWindow(object):
         self.deckSelectCE.addItem("")
 
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
-        self.frame_2.setGeometry(QtCore.QRect(550, 50, 100, 200))
+        self.frame_2.setGeometry(QtCore.QRect(550, 20, 100, 250))
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_2.setObjectName("frame_2")
@@ -86,7 +133,7 @@ class Ui_MainWindow(object):
         self.newDeckCEButton.setObjectName("newDeckCEButton")
         self.verticalLayout_2.addWidget(self.newDeckCEButton)
 
-        self.newDeckCEButton.clicked.connect(self.new_deck_button_clicked)
+        self.newDeckCEButton.clicked.connect(self.open_window)
 
         self.newCardCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newCardCEButton.setObjectName("newCardCEButton")
@@ -106,11 +153,19 @@ class Ui_MainWindow(object):
         # delete card button
         self.deleteCardButton.clicked.connect(self.delete_card_button_clicked)
 
-        self.saveCEButton = QtWidgets.QPushButton(parent=self.frame_2)
-        self.saveCEButton.setObjectName("saveCEButton")
-        self.verticalLayout_2.addWidget(self.saveCEButton)
+        # save card button card edit tab
+        self.saveCardButton = QtWidgets.QPushButton(parent=self.frame_2)
+        self.saveCardButton.setObjectName("saveCardButton")
+        self.verticalLayout_2.addWidget(self.saveCardButton)
 
-        self.saveCEButton.clicked.connect(self.CE_save_button_clicked)
+        self.saveCardButton.clicked.connect(self.save_card_button_clicked)
+
+        # save deck button card edit tab
+        self.saveDeckButton = QtWidgets.QPushButton(parent=self.frame_2)
+        self.saveDeckButton.setObjectName("saveDeckButton")
+        self.verticalLayout_2.addWidget(self.saveDeckButton)
+
+        self.saveDeckButton.clicked.connect(self.save_deck_button_clicked)
 
         self.frame_4 = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame_4.setGeometry(QtCore.QRect(15, 15, 530, 230))
@@ -179,7 +234,7 @@ class Ui_MainWindow(object):
         self.newDocumentButton.setObjectName("newDocumentButton")
         self.verticalLayout_3.addWidget(self.newDocumentButton)
         # new notes document button
-        self.newDocumentButton.clicked.connect(self.new_document_button_clicked)
+        self.newDocumentButton.clicked.connect(self.open_window)
 
         self.deleteNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.deleteNotesButton.setObjectName("deleteNotesButton")
@@ -228,6 +283,8 @@ class Ui_MainWindow(object):
         self.flipCardButton.setGeometry(QtCore.QRect(500, 200, 100, 50))
         self.flipCardButton.setObjectName("flipCardButton")
 
+        self.flipCardButton.clicked.connect(self.testMethod)
+
         self.tabWidget.addTab(self.studySessionTab, "")
         self.verticalLayout.addWidget(self.tabWidget)
 
@@ -247,6 +304,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.secondary_window = None
+
     def retranslateUi(self, MainWindow):
 
         _translate = QtCore.QCoreApplication.translate
@@ -257,7 +316,8 @@ class Ui_MainWindow(object):
         self.deckSelectCE.setItemText(0, _translate("MainWindow", "deck1_t"))
         self.newDeckCEButton.setText(_translate("MainWindow", "+New Deck"))
         self.newCardCEButton.setText(_translate("MainWindow", "+New Card"))
-        self.saveCEButton.setText(_translate("MainWindow", "Save"))
+        self.saveCardButton.setText(_translate("MainWindow", "Save Card"))
+        self.saveDeckButton.setText(_translate("MainWindow", "Save Deck"))
         self.frontLabel.setText(_translate("MainWindow", "FRONT"))
         self.backLabel.setText(_translate("MainWindow", "BACK"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cardEditTab), _translate("MainWindow", "Card Edit"))
@@ -278,6 +338,21 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
+
+
+
+    def testMethod(self):
+        print("testMethod")
+    def open_window(self):
+        if self.secondary_window is None or not self.secondary_window.isVisible():
+            self.secondary_window = QtWidgets.QMainWindow()  # or QWidget, depending on what you want
+            self.ui_secondary = SecondaryWindow()
+            self.ui_secondary.setupUi(self.secondary_window)
+            self.secondary_window.show()
+        else:
+            self.secondary_window.raise_()
+            self.secondary_window.activateWindow()
+
     # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
         self.deckIndex.setText(str(self.CURRENT_CARD_INDEX) + "/" + str(self.CARDS_IN_DECK))
@@ -287,7 +362,11 @@ class Ui_MainWindow(object):
         print(self.notesSelect.currentText()) # this shows what notes document user is currently on
         print(self.notesText.toPlainText()) # shows contents of notes document
 
-    def CE_save_button_clicked(self):
+    def save_card_button_clicked(self):
+        print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
+        print(self.cardFrontText.toPlainText()) # shows contents of front of card
+        print(self.cardBackText.toPlainText()) # shows contents of back of card
+    def save_deck_button_clicked(self):
         print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
         print(self.cardFrontText.toPlainText()) # shows contents of front of card
         print(self.cardBackText.toPlainText()) # shows contents of back of card
