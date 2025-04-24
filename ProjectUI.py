@@ -8,7 +8,8 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class SecondaryWindow(QtWidgets.QWidget):
+# window to add a new notes document
+class NotesPopupWindow(QtWidgets.QWidget):
     def setupUi(self, secondaryWindow):
         secondaryWindow.setObjectName("secondaryWindow")
         secondaryWindow.resize(300, 150)
@@ -30,12 +31,12 @@ class SecondaryWindow(QtWidgets.QWidget):
         self.plainTextEdit.setGeometry(QtCore.QRect(30, 60, 240, 30))
         self.plainTextEdit.setObjectName("plainTextEdit")
 
-        self.confirmNameButton = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.confirmNameButton.setGeometry(QtCore.QRect(120, 100, 60, 20))
-        self.confirmNameButton.setObjectName("confirmNameButton")
+        self.enterNotesName = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.enterNotesName.setGeometry(QtCore.QRect(120, 100, 60, 20))
+        self.enterNotesName.setObjectName("confirmNameButton")
 
-        #button is calling a test method defined in main window, for future ref
-        self.confirmNameButton.clicked.connect(self.close_window)
+        #button closes secondary window when pressed
+        self.enterNotesName.clicked.connect(self.submit_and_close_window)
 
 
         secondaryWindow.setCentralWidget(self.centralwidget)
@@ -53,11 +54,68 @@ class SecondaryWindow(QtWidgets.QWidget):
     def retranslateUi(self, secondaryWindow):
         _translate = QtCore.QCoreApplication.translate
         secondaryWindow.setWindowTitle(_translate("secondaryWindow", "MainWindow"))
-        self.confirmNameButton.setText(_translate("secondaryWindow", "Enter"))
+        self.enterNotesName.setText(_translate("secondaryWindow", "Enter"))
         self.nameItemLabel.setText(_translate("secondaryWindow", "Name item :"))
 
-    def close_window(self):
+    def submit_and_close_window(self):
+        print(self.plainTextEdit.toPlainText()+"\nnew notes btw")
+
         self.window.close()
+
+# window to add new deck
+class DeckPopupWindow(QtWidgets.QWidget):
+    def setupUi(self, secondaryWindow):
+        secondaryWindow.setObjectName("secondaryWindow")
+        secondaryWindow.resize(300, 150)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(secondaryWindow.sizePolicy().hasHeightForWidth())
+        secondaryWindow.setSizePolicy(sizePolicy)
+        self.window = secondaryWindow
+        self.centralwidget = QtWidgets.QWidget(parent=secondaryWindow)
+        self.centralwidget.setObjectName("centralwidget")
+
+        self.nameItemLabel = QtWidgets.QLabel(parent=self.centralwidget)
+        self.nameItemLabel.setGeometry(QtCore.QRect(110, 30, 100, 20))
+        self.nameItemLabel.setStyleSheet("font-size: 12pt;")
+        self.nameItemLabel.setObjectName("nameItemLabel")
+
+        self.plainTextEdit = QtWidgets.QPlainTextEdit(parent=self.centralwidget)
+        self.plainTextEdit.setGeometry(QtCore.QRect(30, 60, 240, 30))
+        self.plainTextEdit.setObjectName("plainTextEdit")
+
+        self.enterNotesName = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.enterNotesName.setGeometry(QtCore.QRect(120, 100, 60, 20))
+        self.enterNotesName.setObjectName("confirmNameButton")
+
+        #button closes secondary window when pressed
+        self.enterNotesName.clicked.connect(self.submit_and_close_window)
+
+
+        secondaryWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(parent=secondaryWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 20))
+        self.menubar.setObjectName("menubar")
+        secondaryWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(parent=secondaryWindow)
+        self.statusbar.setObjectName("statusbar")
+        secondaryWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(secondaryWindow)
+        QtCore.QMetaObject.connectSlotsByName(secondaryWindow)
+
+    def retranslateUi(self, secondaryWindow):
+        _translate = QtCore.QCoreApplication.translate
+        secondaryWindow.setWindowTitle(_translate("secondaryWindow", "MainWindow"))
+        self.enterNotesName.setText(_translate("secondaryWindow", "Enter"))
+        self.nameItemLabel.setText(_translate("secondaryWindow", "Name item :"))
+
+    def submit_and_close_window(self):
+        print(self.plainTextEdit.toPlainText()+"\nnew deck btw")
+
+        self.window.close()
+
 
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
@@ -137,7 +195,7 @@ class Ui_MainWindow(object):
         self.newDeckCEButton.setObjectName("newDeckCEButton")
         self.verticalLayout_2.addWidget(self.newDeckCEButton)
 
-        self.newDeckCEButton.clicked.connect(self.open_window)
+        self.newDeckCEButton.clicked.connect(self.open_new_deck_window)
 
         self.newCardCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newCardCEButton.setObjectName("newCardCEButton")
@@ -238,7 +296,7 @@ class Ui_MainWindow(object):
         self.newDocumentButton.setObjectName("newDocumentButton")
         self.verticalLayout_3.addWidget(self.newDocumentButton)
         # new notes document button
-        self.newDocumentButton.clicked.connect(self.open_window)
+        self.newDocumentButton.clicked.connect(self.open_new_document_window)
 
         self.deleteNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.deleteNotesButton.setObjectName("deleteNotesButton")
@@ -347,10 +405,20 @@ class Ui_MainWindow(object):
 
     def testMethod(self):
         print("testMethod")
-    def open_window(self):
+    def open_new_document_window(self):
         if self.secondary_window is None or not self.secondary_window.isVisible():
             self.secondary_window = QtWidgets.QMainWindow()  # or QWidget, depending on what you want
-            self.ui_secondary = SecondaryWindow()
+            self.ui_secondary = NotesPopupWindow()
+            self.ui_secondary.setupUi(self.secondary_window)
+            self.secondary_window.show()
+        else:
+            self.secondary_window.raise_()
+            self.secondary_window.activateWindow()
+
+    def open_new_deck_window(self):
+        if self.secondary_window is None or not self.secondary_window.isVisible():
+            self.secondary_window = QtWidgets.QMainWindow()  # or QWidget, depending on what you want
+            self.ui_secondary = DeckPopupWindow()
             self.ui_secondary.setupUi(self.secondary_window)
             self.secondary_window.show()
         else:
