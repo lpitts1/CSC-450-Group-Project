@@ -17,6 +17,7 @@ class SecondaryWindow(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(secondaryWindow.sizePolicy().hasHeightForWidth())
         secondaryWindow.setSizePolicy(sizePolicy)
+        self.window = secondaryWindow
         self.centralwidget = QtWidgets.QWidget(parent=secondaryWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -34,7 +35,7 @@ class SecondaryWindow(QtWidgets.QWidget):
         self.confirmNameButton.setObjectName("confirmNameButton")
 
         #button is calling a test method defined in main window, for future ref
-        self.confirmNameButton.clicked.connect(Ui_MainWindow.testMethod)
+        self.confirmNameButton.clicked.connect(self.close_window)
 
 
         secondaryWindow.setCentralWidget(self.centralwidget)
@@ -54,6 +55,9 @@ class SecondaryWindow(QtWidgets.QWidget):
         secondaryWindow.setWindowTitle(_translate("secondaryWindow", "MainWindow"))
         self.confirmNameButton.setText(_translate("secondaryWindow", "Enter"))
         self.nameItemLabel.setText(_translate("secondaryWindow", "Name item :"))
+
+    def close_window(self):
+        self.window.close()
 
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
