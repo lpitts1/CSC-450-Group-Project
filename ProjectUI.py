@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         self.deckSelectCE.addItem("")
 
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
-        self.frame_2.setGeometry(QtCore.QRect(550, 50, 100, 200))
+        self.frame_2.setGeometry(QtCore.QRect(550, 20, 100, 250))
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_2.setObjectName("frame_2")
@@ -106,11 +106,19 @@ class Ui_MainWindow(object):
         # delete card button
         self.deleteCardButton.clicked.connect(self.delete_card_button_clicked)
 
-        self.saveCEButton = QtWidgets.QPushButton(parent=self.frame_2)
-        self.saveCEButton.setObjectName("saveCEButton")
-        self.verticalLayout_2.addWidget(self.saveCEButton)
+        # save card button card edit tab
+        self.saveCardButton = QtWidgets.QPushButton(parent=self.frame_2)
+        self.saveCardButton.setObjectName("saveCardButton")
+        self.verticalLayout_2.addWidget(self.saveCardButton)
 
-        self.saveCEButton.clicked.connect(self.CE_save_button_clicked)
+        self.saveCardButton.clicked.connect(self.save_card_button_clicked)
+
+        # save deck button card edit tab
+        self.saveDeckButton = QtWidgets.QPushButton(parent=self.frame_2)
+        self.saveDeckButton.setObjectName("saveDeckButton")
+        self.verticalLayout_2.addWidget(self.saveDeckButton)
+
+        self.saveDeckButton.clicked.connect(self.save_deck_button_clicked)
 
         self.frame_4 = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame_4.setGeometry(QtCore.QRect(15, 15, 530, 230))
@@ -228,6 +236,8 @@ class Ui_MainWindow(object):
         self.flipCardButton.setGeometry(QtCore.QRect(500, 200, 100, 50))
         self.flipCardButton.setObjectName("flipCardButton")
 
+        self.flipCardButton.clicked.connect(self.testMethod)
+
         self.tabWidget.addTab(self.studySessionTab, "")
         self.verticalLayout.addWidget(self.tabWidget)
 
@@ -247,6 +257,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.secondary_window = None
+
+
     def retranslateUi(self, MainWindow):
 
         _translate = QtCore.QCoreApplication.translate
@@ -254,15 +267,16 @@ class Ui_MainWindow(object):
         self.backButton.setText(_translate("MainWindow", "<--"))
         self.deckIndex.setText(_translate("MainWindow", str(self.CURRENT_CARD_INDEX)+"/"+str(self.CARDS_IN_DECK)))
         self.forwardButton.setText(_translate("MainWindow", "-->"))
-        self.deckSelectCE.setItemText(0, _translate("MainWindow", "deck1_t"))
+        self.deckSelectCE.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.newDeckCEButton.setText(_translate("MainWindow", "+New Deck"))
         self.newCardCEButton.setText(_translate("MainWindow", "+New Card"))
-        self.saveCEButton.setText(_translate("MainWindow", "Save"))
+        self.saveCardButton.setText(_translate("MainWindow", "Save Card"))
+        self.saveDeckButton.setText(_translate("MainWindow", "Save Deck"))
         self.frontLabel.setText(_translate("MainWindow", "FRONT"))
         self.backLabel.setText(_translate("MainWindow", "BACK"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cardEditTab), _translate("MainWindow", "Card Edit"))
         self.currentSetLabel.setText(_translate("MainWindow", "Current set "))
-        self.deckSelectOverview.setItemText(0, _translate("MainWindow", "deck1_t"))
+        self.deckSelectOverview.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.overviewTab), _translate("MainWindow", "Overview"))
         self.newDocumentButton.setText(_translate("MainWindow", "+New Document"))
         self.deleteNotesButton.setText(_translate("MainWindow", "-Delete Document"))
@@ -273,10 +287,13 @@ class Ui_MainWindow(object):
         self.notesSelect.setItemText(0, _translate("MainWindow", "notes_example"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.notesTab), _translate("MainWindow", "Notes"))
         self.currentSetLabel_2.setText(_translate("MainWindow", "Current set "))
-        self.deckSelectSS.setItemText(0, _translate("MainWindow", "deck1_t"))
+        self.deckSelectSS.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.flipCardButton.setText(_translate("MainWindow", "Flip card"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
+
+    def testMethod(self):
+        print("testMethod")
 
     # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
@@ -287,7 +304,11 @@ class Ui_MainWindow(object):
         print(self.notesSelect.currentText()) # this shows what notes document user is currently on
         print(self.notesText.toPlainText()) # shows contents of notes document
 
-    def CE_save_button_clicked(self):
+    def save_card_button_clicked(self):
+        print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
+        print(self.cardFrontText.toPlainText()) # shows contents of front of card
+        print(self.cardBackText.toPlainText()) # shows contents of back of card
+    def save_deck_button_clicked(self):
         print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
         print(self.cardFrontText.toPlainText()) # shows contents of front of card
         print(self.cardBackText.toPlainText()) # shows contents of back of card
@@ -297,8 +318,8 @@ class Ui_MainWindow(object):
     def new_document_button_clicked(self):
         self.NOTE_DOCUMENT_INDEX += 1 #increments by 1 for each new document added
         self.notesSelect.addItem("")
-        self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_"+str(self.NOTE_DOCUMENT_INDEX)) #sets drop down index and example title
-
+        #self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, str(NotesPopupWindow.TITLE_TEXT)) #sets drop down index and example title
+        self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_"+str(self.NOTE_DOCUMENT_INDEX))
     def new_deck_button_clicked(self):
         self.DECK_INDEX += 1 #increments by 1 for each new deck added
         self.deckSelectCE.addItem("")
@@ -335,7 +356,7 @@ class Ui_MainWindow(object):
         print("Notes deleted")
     def delete_deck_button_clicked(self):
         print("Deck deleted")
-        #self.deckSelectCE.removeItem("")
+        #self.deckSelectCE.removeItem()
     def delete_card_button_clicked(self):
         print("Card deleted")
         self.CARDS_IN_DECK -= 1
