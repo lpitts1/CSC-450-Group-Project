@@ -1,5 +1,15 @@
+# Preston Zuniga
+# 4/21/25
+# CSC450-002
+# Professor Devon Simmonds
+# Card class
 class Card:
     def __init__(self, front, back):
+        """
+        Constructor.
+        :param front: str  will be the contents of the front of the flashcard
+        :param back: str   will be the contents of the back of the flashcard
+        """
         self.front = front  # Question or term
         self.back = back    # Answer or definition
 
