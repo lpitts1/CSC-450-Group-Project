@@ -8,115 +8,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-# window to add a new notes document
-class NotesPopupWindow(QtWidgets.QWidget):
-    def setupUi(self, secondaryWindow):
-        secondaryWindow.setObjectName("secondaryWindow")
-        secondaryWindow.resize(300, 150)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(secondaryWindow.sizePolicy().hasHeightForWidth())
-        secondaryWindow.setSizePolicy(sizePolicy)
-        self.window = secondaryWindow
-        self.centralwidget = QtWidgets.QWidget(parent=secondaryWindow)
-        self.centralwidget.setObjectName("centralwidget")
-
-        self.nameItemLabel = QtWidgets.QLabel(parent=self.centralwidget)
-        self.nameItemLabel.setGeometry(QtCore.QRect(110, 30, 100, 20))
-        self.nameItemLabel.setStyleSheet("font-size: 12pt;")
-        self.nameItemLabel.setObjectName("nameItemLabel")
-
-        self.plainTextEdit = QtWidgets.QPlainTextEdit(parent=self.centralwidget)
-        self.plainTextEdit.setGeometry(QtCore.QRect(30, 60, 240, 30))
-        self.plainTextEdit.setObjectName("plainTextEdit")
-
-        self.enterNotesName = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.enterNotesName.setGeometry(QtCore.QRect(120, 100, 60, 20))
-        self.enterNotesName.setObjectName("confirmNameButton")
-
-        #button closes secondary window when pressed
-        self.enterNotesName.clicked.connect(self.submit_and_close_window)
-
-
-        secondaryWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(parent=secondaryWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 20))
-        self.menubar.setObjectName("menubar")
-        secondaryWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(parent=secondaryWindow)
-        self.statusbar.setObjectName("statusbar")
-        secondaryWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(secondaryWindow)
-        QtCore.QMetaObject.connectSlotsByName(secondaryWindow)
-
-    def retranslateUi(self, secondaryWindow):
-        _translate = QtCore.QCoreApplication.translate
-        secondaryWindow.setWindowTitle(_translate("secondaryWindow", "MainWindow"))
-        self.enterNotesName.setText(_translate("secondaryWindow", "Enter"))
-        self.nameItemLabel.setText(_translate("secondaryWindow", "Name item :"))
-
-    def submit_and_close_window(self):
-        print(self.plainTextEdit.toPlainText()+"\nnew notes btw")
-
-        self.window.close()
-
-# window to add new deck
-class DeckPopupWindow(QtWidgets.QWidget):
-    def setupUi(self, secondaryWindow):
-        secondaryWindow.setObjectName("secondaryWindow")
-        secondaryWindow.resize(300, 150)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(secondaryWindow.sizePolicy().hasHeightForWidth())
-        secondaryWindow.setSizePolicy(sizePolicy)
-        self.window = secondaryWindow
-        self.centralwidget = QtWidgets.QWidget(parent=secondaryWindow)
-        self.centralwidget.setObjectName("centralwidget")
-
-        self.nameItemLabel = QtWidgets.QLabel(parent=self.centralwidget)
-        self.nameItemLabel.setGeometry(QtCore.QRect(110, 30, 100, 20))
-        self.nameItemLabel.setStyleSheet("font-size: 12pt;")
-        self.nameItemLabel.setObjectName("nameItemLabel")
-
-        self.plainTextEdit = QtWidgets.QPlainTextEdit(parent=self.centralwidget)
-        self.plainTextEdit.setGeometry(QtCore.QRect(30, 60, 240, 30))
-        self.plainTextEdit.setObjectName("plainTextEdit")
-
-        self.enterNotesName = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.enterNotesName.setGeometry(QtCore.QRect(120, 100, 60, 20))
-        self.enterNotesName.setObjectName("confirmNameButton")
-
-        #button closes secondary window when pressed
-        self.enterNotesName.clicked.connect(self.submit_and_close_window)
-
-
-        secondaryWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(parent=secondaryWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 20))
-        self.menubar.setObjectName("menubar")
-        secondaryWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(parent=secondaryWindow)
-        self.statusbar.setObjectName("statusbar")
-        secondaryWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(secondaryWindow)
-        QtCore.QMetaObject.connectSlotsByName(secondaryWindow)
-
-    def retranslateUi(self, secondaryWindow):
-        _translate = QtCore.QCoreApplication.translate
-        secondaryWindow.setWindowTitle(_translate("secondaryWindow", "MainWindow"))
-        self.enterNotesName.setText(_translate("secondaryWindow", "Enter"))
-        self.nameItemLabel.setText(_translate("secondaryWindow", "Name item :"))
-
-    def submit_and_close_window(self):
-        print(self.plainTextEdit.toPlainText()+"\nnew deck btw")
-
-        self.window.close()
-
-
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
     NOTE_DOCUMENT_INDEX = 0
@@ -195,7 +86,7 @@ class Ui_MainWindow(object):
         self.newDeckCEButton.setObjectName("newDeckCEButton")
         self.verticalLayout_2.addWidget(self.newDeckCEButton)
 
-        self.newDeckCEButton.clicked.connect(self.open_new_deck_window)
+        self.newDeckCEButton.clicked.connect(self.new_deck_button_clicked)
 
         self.newCardCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newCardCEButton.setObjectName("newCardCEButton")
@@ -296,7 +187,7 @@ class Ui_MainWindow(object):
         self.newDocumentButton.setObjectName("newDocumentButton")
         self.verticalLayout_3.addWidget(self.newDocumentButton)
         # new notes document button
-        self.newDocumentButton.clicked.connect(self.open_new_document_window)
+        self.newDocumentButton.clicked.connect(self.new_document_button_clicked)
 
         self.deleteNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.deleteNotesButton.setObjectName("deleteNotesButton")
@@ -368,6 +259,7 @@ class Ui_MainWindow(object):
 
         self.secondary_window = None
 
+
     def retranslateUi(self, MainWindow):
 
         _translate = QtCore.QCoreApplication.translate
@@ -375,7 +267,7 @@ class Ui_MainWindow(object):
         self.backButton.setText(_translate("MainWindow", "<--"))
         self.deckIndex.setText(_translate("MainWindow", str(self.CURRENT_CARD_INDEX)+"/"+str(self.CARDS_IN_DECK)))
         self.forwardButton.setText(_translate("MainWindow", "-->"))
-        self.deckSelectCE.setItemText(0, _translate("MainWindow", "deck1_t"))
+        self.deckSelectCE.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.newDeckCEButton.setText(_translate("MainWindow", "+New Deck"))
         self.newCardCEButton.setText(_translate("MainWindow", "+New Card"))
         self.saveCardButton.setText(_translate("MainWindow", "Save Card"))
@@ -384,7 +276,7 @@ class Ui_MainWindow(object):
         self.backLabel.setText(_translate("MainWindow", "BACK"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cardEditTab), _translate("MainWindow", "Card Edit"))
         self.currentSetLabel.setText(_translate("MainWindow", "Current set "))
-        self.deckSelectOverview.setItemText(0, _translate("MainWindow", "deck1_t"))
+        self.deckSelectOverview.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.overviewTab), _translate("MainWindow", "Overview"))
         self.newDocumentButton.setText(_translate("MainWindow", "+New Document"))
         self.deleteNotesButton.setText(_translate("MainWindow", "-Delete Document"))
@@ -395,35 +287,13 @@ class Ui_MainWindow(object):
         self.notesSelect.setItemText(0, _translate("MainWindow", "notes_example"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.notesTab), _translate("MainWindow", "Notes"))
         self.currentSetLabel_2.setText(_translate("MainWindow", "Current set "))
-        self.deckSelectSS.setItemText(0, _translate("MainWindow", "deck1_t"))
+        self.deckSelectSS.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.flipCardButton.setText(_translate("MainWindow", "Flip card"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
-
-
-
     def testMethod(self):
         print("testMethod")
-    def open_new_document_window(self):
-        if self.secondary_window is None or not self.secondary_window.isVisible():
-            self.secondary_window = QtWidgets.QMainWindow()  # or QWidget, depending on what you want
-            self.ui_secondary = NotesPopupWindow()
-            self.ui_secondary.setupUi(self.secondary_window)
-            self.secondary_window.show()
-        else:
-            self.secondary_window.raise_()
-            self.secondary_window.activateWindow()
-
-    def open_new_deck_window(self):
-        if self.secondary_window is None or not self.secondary_window.isVisible():
-            self.secondary_window = QtWidgets.QMainWindow()  # or QWidget, depending on what you want
-            self.ui_secondary = DeckPopupWindow()
-            self.ui_secondary.setupUi(self.secondary_window)
-            self.secondary_window.show()
-        else:
-            self.secondary_window.raise_()
-            self.secondary_window.activateWindow()
 
     # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
@@ -448,8 +318,8 @@ class Ui_MainWindow(object):
     def new_document_button_clicked(self):
         self.NOTE_DOCUMENT_INDEX += 1 #increments by 1 for each new document added
         self.notesSelect.addItem("")
-        self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_"+str(self.NOTE_DOCUMENT_INDEX)) #sets drop down index and example title
-
+        #self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, str(NotesPopupWindow.TITLE_TEXT)) #sets drop down index and example title
+        self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_"+str(self.NOTE_DOCUMENT_INDEX))
     def new_deck_button_clicked(self):
         self.DECK_INDEX += 1 #increments by 1 for each new deck added
         self.deckSelectCE.addItem("")
@@ -486,7 +356,7 @@ class Ui_MainWindow(object):
         print("Notes deleted")
     def delete_deck_button_clicked(self):
         print("Deck deleted")
-        #self.deckSelectCE.removeItem("")
+        #self.deckSelectCE.removeItem()
     def delete_card_button_clicked(self):
         print("Card deleted")
         self.CARDS_IN_DECK -= 1
