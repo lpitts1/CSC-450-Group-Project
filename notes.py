@@ -3,6 +3,9 @@
 # CSC450-002
 # Professor Devon Simmonds
 # Notes class
+import readWrite
+
+
 class Notes:
     def __init__(self, title, body="LOAD"):
         """
@@ -11,37 +14,31 @@ class Notes:
         :param body: str    the notes content; optional parameter. If not passed, will try to open <title>.txt, and its
                             contents will be the body
         """
-        self.title = title
+        self.__title = title
         if body == "LOAD":              # the default value of the body parameter
-            file = open(title+".txt")   # open a textfile with a name equal to the title passed
-            file.readline()             # first line says "can(not) be read as a deck"
-
-            # populate the body with the contents of the text file
-            self.body = ""
-            for line in file:
-                self.body += line
-
+            self.__body = readWrite.readFromFile(f'{title}.txt')  # read in the file with that name
+            self.__body = self.__body[self.__body.index('\n') + 1:]    # delete the first line
         else:
-            self.body = body
+            self.__body = body
 
     def get_title(self):
-        return self.title
+        return self.__title
 
     def set_title(self, title):
-        self.title = title
+        self.__title = title
 
     def get_body(self):
-        return self.body
+        return self.__body
 
     def set_body(self, body):
-        self.body = body
+        self.__body = body
 
     def __is_valid_deck(self):
         """
         Private function, used when storing.
         :return:
         """
-        lines = self.body.split("\n")
+        lines = self.__body.split("\n")
         for line in lines:
             front_back = line.split(":")
 
@@ -55,26 +52,18 @@ class Notes:
         save the note to a text file
         :return: NoneType
         """
-        file = open(self.title+".txt", 'w')
-
-        # a header indicating whether it can be read as a deck or not
-        file.write("can be read as a deck\n" if self.__is_valid_deck() else "cannot be read as a deck\n")
-
-        file.write(self.body)
+        readWrite.writeToFile(f"""can{"" if self.__is_valid_deck() else "not"} be read as a valid deck
+{self.__body}""", f"{self.__title}.txt")
 
     def __str__(self):
-        return self.body
+        return self.__body
+
+    def delete(self):
+        readWrite.deleteFile(f"{self.__title}.txt")
 
 
 def main():
-    notes = Notes("Math", """1+1: 2
-2+2: 4
-3+3""")
-
-    print(notes)
-    notes.store()
-
-    math_notes = Notes("Math")
+    notes = Notes("notes_example")
     print(notes)
 
 

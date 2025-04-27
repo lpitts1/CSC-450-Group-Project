@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from notes import Notes
 
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
@@ -206,6 +207,7 @@ class Ui_MainWindow(object):
         self.notesSelect.setObjectName("notesSelect")
         self.notesSelect.addItem("")
         self.tabWidget.addTab(self.notesTab, "")
+        self.notesSelect.currentIndexChanged.connect(self.dropdown_changed)
 
         self.studySessionTab = QtWidgets.QWidget()
         self.studySessionTab.setObjectName("studySessionTab")
@@ -259,7 +261,6 @@ class Ui_MainWindow(object):
 
         self.secondary_window = None
 
-
     def retranslateUi(self, MainWindow):
 
         _translate = QtCore.QCoreApplication.translate
@@ -293,16 +294,21 @@ class Ui_MainWindow(object):
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
     def testMethod(self):
-        print("testMethod")
+        print("JAAAAANK!")
+
+    def dropdown_changed(self):
+        print("Dropdown changed.")
 
     # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
         self.deckIndex.setText(str(self.CURRENT_CARD_INDEX) + "/" + str(self.CARDS_IN_DECK))
 
-    #save the contents of the notes text field (notesText)
+    # save the contents of the notes text field (notesText)
     def notes_save_button_clicked(self):
-        print(self.notesSelect.currentText()) # this shows what notes document user is currently on
-        print(self.notesText.toPlainText()) # shows contents of notes document
+        print(self.notesSelect.currentText())  # this shows what notes document user is currently on
+        print(self.notesText.toPlainText())  # shows contents of notes document
+        notes = Notes(self.notesSelect.currentText(), self.notesText.toPlainText())
+        notes.store()
 
     def save_card_button_clicked(self):
         print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
