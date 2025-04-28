@@ -304,7 +304,17 @@ class Ui_MainWindow(object):
         print("JAAAAANK!")
 
     def dropdown_changed(self):
-        print("Dropdown changed.")
+        print('ink')
+        title = self.notesSelect.currentText()
+        print('smells')
+        try:
+            notes = Notes(f'{title}.txt')
+            print('like')
+            self.notesText.setText(notes.get_body())
+            print('bananas')
+        except FileNotFoundError:
+            print("Well fiddle my diddles")
+
 
     # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
