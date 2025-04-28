@@ -12,6 +12,8 @@
 #
 #
 
+# jank
+
 from PyQt6 import QtCore, QtGui, QtWidgets
 from notes import Notes
 
