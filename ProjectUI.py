@@ -12,8 +12,7 @@ import deck
 from notes import Notes
 
 class Ui_MainWindow(object):
-    listofcard = [] # temp list for testing save card button
-    DECKS = {}
+    CURRENT_DECK = None
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
     NOTE_DOCUMENT_INDEX = 0
     # increments for each deck created, used by new_deck_button_clicked()
@@ -77,6 +76,7 @@ class Ui_MainWindow(object):
         self.deckSelectCE.setGeometry(QtCore.QRect(255, 5, 70, 25))
         self.deckSelectCE.setObjectName("deckSelectCE")
         self.deckSelectCE.addItem("")
+        self.deckSelectCE.currentIndexChanged.connect(self.dropdown_changed_CE)
 
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame_2.setGeometry(QtCore.QRect(550, 20, 100, 250))
@@ -169,6 +169,8 @@ class Ui_MainWindow(object):
         self.deckSelectOverview.setObjectName("deckSelectOverview")
         self.deckSelectOverview.addItem("")
         self.horizontalLayout_2.addWidget(self.deckSelectOverview)
+        self.deckSelectOverview.currentIndexChanged.connect(self.dropdown_changed)
+
 
         self.tabWidget.addTab(self.overviewTab, "")
 
@@ -238,6 +240,7 @@ class Ui_MainWindow(object):
         self.deckSelectSS.setObjectName("deckSelectSS")
         self.deckSelectSS.addItem("")
         self.horizontalLayout_3.addWidget(self.deckSelectSS)
+        self.deckSelectSS.currentIndexChanged.connect(self.dropdown_changed)
 
         self.flipCardButton = QtWidgets.QPushButton(parent=self.studySessionTab)
         self.flipCardButton.setGeometry(QtCore.QRect(500, 200, 100, 50))
@@ -300,10 +303,15 @@ class Ui_MainWindow(object):
 
     def testMethod(self):
         print("JAAAAANK!")
-        print(self.DECKS)
+        print(str(self.DECKS))
 
     def dropdown_changed(self):
         print("Dropdown changed.")
+
+    def dropdown_changed_CE(self):
+        self.CURRENT_DECK = self.deckSelectCE.currentText()
+        print("Dropdown changed.")
+        print(self.CURRENT_DECK)
 
     # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
@@ -319,12 +327,7 @@ class Ui_MainWindow(object):
     def save_card_button_clicked(self):
         # creates a new Card object
         newCard = card.Card(self.cardFrontText.toPlainText(), self.cardBackText.toPlainText())
-        currentDeck = self.deckSelectCE.currentText()
-        if currentDeck in self.DECKS:
-            self.DECKS[currentDeck].add_card(newCard)
-            print("fucking added " + str(newCard) + " to " + str(currentDeck))
-        else:
-            print("fucking error")
+
 
         print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
         print(self.cardFrontText.toPlainText()) # shows contents of front of card
@@ -333,10 +336,7 @@ class Ui_MainWindow(object):
     def save_deck_button_clicked(self):
         # creates a new Deck object
         newDeck = deck.Deck(str(self.deckSelectCE.currentText()))
-        # create a new Deck object if it doesn't yet exist
-        if newDeck not in self.DECKS:
-            self.DECKS[newDeck] = deck.Deck(str(newDeck))
-
+        newDeck.store()
 
         print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
         print(self.cardFrontText.toPlainText()) # shows contents of front of card
@@ -360,6 +360,7 @@ class Ui_MainWindow(object):
 
         self.deckSelectOverview.addItem("")
         self.deckSelectOverview.setItemText(self.DECK_INDEX, "deck_"+str(self.DECK_INDEX))
+        self.deckSelectOverview.currentIndexChanged.connect(self.dropdown_changed)
 
     # this method increments the number of cards in a deck and updates the label
     def new_card_button_clicked(self):
@@ -397,6 +398,7 @@ class Ui_MainWindow(object):
         print("Notes deleted")
     def delete_deck_button_clicked(self):
         print("Deck deleted")
+        #deck.Deck.delete()
         #self.deckSelectCE.removeItem()
     def delete_card_button_clicked(self):
         print("Card deleted")
