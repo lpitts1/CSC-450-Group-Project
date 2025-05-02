@@ -48,7 +48,8 @@ def registerFile(fileName):
         readable_files = readByLine("readable_files.txt")[:-1]  # a text file containing all readable files
     except FileNotFoundError:
         readable_files = []
-    readable_files.append(f"{fileName}\n")
+    if f"{fileName}\n" not in readable_files:
+        readable_files.append(f"{fileName}\n")
     writeByLine(readable_files, "readable_files.txt")
 
 def deleteFile(fileName):
@@ -63,14 +64,18 @@ def isReadable(fileName):
     if fileName != "readable_files.txt" and f"{fileName}\n" not in readByLine("readable_files.txt"):
         raise FileNotFoundError(f"{fileName} does not exist for purposes of this function.")
 
+def getReadableFiles():
+    with open("readable_files.txt") as readable_files:
+        contents = readable_files.read()
+        lines = contents.split('\n')
+        return lines[:-1]
+
+def purge():
+    with open("readable_files.txt", "w") as bye_bye:
+        pass
+
 def main():
-    for i in range(10):
-        file = f"jank{i}.txt"
-        deleteFile(file)
-        try:
-            print(readFromFile(file))
-        except FileNotFoundError as e:
-            print(i)
+    deleteFile("I'm watching you")
 
 if __name__ == '__main__':
     main()

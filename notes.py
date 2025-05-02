@@ -16,8 +16,12 @@ class Notes:
         """
         self.__title = title
         if body == "LOAD":              # the default value of the body parameter
-            self.__body = readWrite.readFromFile(f'{title}.txt')  # read in the file with that name
-            self.__body = self.__body[self.__body.index('\n') + 1:]    # delete the first line
+            try:
+                self.__body = readWrite.readFromFile(f'{title}.txt')  # read in the file with that name
+                self.__body = self.__body[self.__body.index('\n') + 1:]    # delete the first line
+            except FileNotFoundError:
+                print("it's fine life isn't hopeless or anything")
+                self.__body = ""
         else:
             self.__body = body
 

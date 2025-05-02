@@ -12,9 +12,9 @@
 #
 #
 
-# jank
-
 from PyQt6 import QtCore, QtGui, QtWidgets
+
+import readWrite
 from notes import Notes
 
 class Ui_MainWindow(object):
@@ -31,7 +31,7 @@ class Ui_MainWindow(object):
         defaultWindowWidth, defaultWindowHeight = 670,380
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(defaultWindowWidth, defaultWindowHeight)
-        MainWindow.setMinimumSize(QtCore.QSize(int(defaultWindowWidth*0.75), int(defaultWindowHeight*0.75))) # window minimum size
+        MainWindow.setMinimumSize(QtCore.QSize(int(defaultWindowWidth*0.75), int(defaultWindowHeight*0.75)))    # window minimum size
 
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setAutoFillBackground(True)
@@ -216,6 +216,7 @@ class Ui_MainWindow(object):
         self.notesSelect.addItem("")
         self.tabWidget.addTab(self.notesTab, "")
         self.notesSelect.currentIndexChanged.connect(self.dropdown_changed)
+        self.populate_dropdown()
 
         self.studySessionTab = QtWidgets.QWidget()
         self.studySessionTab.setObjectName("studySessionTab")
@@ -306,14 +307,10 @@ class Ui_MainWindow(object):
         print("JAAAAANK!")
 
     def dropdown_changed(self):
-        print('ink')
         title = self.notesSelect.currentText()
-        print('smells')
         try:
-            notes = Notes(f'{title}.txt')
-            print('like')
-            self.notesText.setText(notes.get_body())
-            print('bananas')
+            notes = Notes(f'{title}')
+            self.notesText.setText(f'{title}\n{notes.get_body()}')
         except FileNotFoundError:
             print("Well fiddle my diddles")
 
@@ -326,7 +323,24 @@ class Ui_MainWindow(object):
     def notes_save_button_clicked(self):
         print(self.notesSelect.currentText())  # this shows what notes document user is currently on
         print(self.notesText.toPlainText())  # shows contents of notes document
-        notes = Notes(self.notesSelect.currentText(), self.notesText.toPlainText())
+        if len(self.notesText.toPlainText()) > 0:
+            title = self.notesText.toPlainText().split('\n')[0]
+        else:
+            i = 0
+            while True:
+                title = f'empty{i}'
+                if f'{title}.txt' in readWrite.getReadableFiles():
+                    i += 1
+                else:
+                    break
+        if len(title) > 16:
+            title = title[:16]
+        body_lines = self.notesText.toPlainText().split('\n')[1:]
+        body = ''
+        for i in range(len(body_lines)):
+            body += f'{body_lines[i]}\n'
+        self.notesSelect.setItemText(self.notesSelect.currentIndex(), title)
+        notes = Notes(title, body)
         notes.store()
 
     def save_card_button_clicked(self):
@@ -364,7 +378,7 @@ class Ui_MainWindow(object):
         # label update
         self.update_index_label()
 
-    # this decrements the current card and loops around to the last card in the deeck
+    # this decrements the current card and loops around to the last card in the deck
     def back_button_clicked(self):
         print("back")
         self.CURRENT_CARD_INDEX -= 1
@@ -374,7 +388,7 @@ class Ui_MainWindow(object):
         self.update_index_label()
 
     # this increments the current card and loops around to the first card in the deck
-    # this increments the current card and loops around to the first card in the deckec
+    # this increments the current card and loops around to the first card in the deck
     def forward_button_clicked(self):
         print("forward")
         self.CURRENT_CARD_INDEX += 1
@@ -384,7 +398,11 @@ class Ui_MainWindow(object):
         self.update_index_label()
 
     def delete_notes_button_clicked(self):
-        print("Notes deleted")
+        if self.NOTE_DOCUMENT_INDEX > 0:
+            readWrite.deleteFile(f'{self.notesSelect.currentText()}.txt')
+            self.notesSelect.removeItem(self.notesSelect.currentIndex())
+            print("Notes deleted")
+            self.NOTE_DOCUMENT_INDEX -= 1
     def delete_deck_button_clicked(self):
         print("Deck deleted")
         #self.deckSelectCE.removeItem()
@@ -396,6 +414,13 @@ class Ui_MainWindow(object):
         if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
             self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
         self.update_index_label()
+
+    def populate_dropdown(self):
+        readable_files = readWrite.getReadableFiles()
+        for i in range(len(readable_files)):
+            self.NOTE_DOCUMENT_INDEX += 1
+            self.notesSelect.addItem("")
+            self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, readable_files[i][:-4])
 
 if __name__ == "__main__":
     import sys
