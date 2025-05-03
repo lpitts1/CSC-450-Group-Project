@@ -523,8 +523,11 @@ class Ui_MainWindow(object):
             print("Well fiddle my diddles")
 
 
-    # updates the contents in the card index label in the card edit tab
     def update_index_label(self):
+        """
+        Updates the contents in the card index label in the card edit tab.
+        :return:
+        """
         self.deckIndex.setText(str(self.CURRENT_CARD_INDEX) + "/" + str(self.CARDS_IN_DECK))
 
     # save the contents of the notes text field (notesText)

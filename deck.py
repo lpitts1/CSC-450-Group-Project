@@ -101,10 +101,7 @@ class Deck:
         return result
 
     def __contains__(self, item):
-        for i in range(len(self.__cards)):
-            if item == self.__cards[i]:
-                return True
-        return False
+        return item in self.__cards
 
 def main():
     deck = Deck("Math")
