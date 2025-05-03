@@ -1,7 +1,7 @@
 class Card:
     def __init__(self, front, back):
         # made attributes private. m
-        self.__front = front  # Question or term
+        self.__front = front # Question or term
         self.__back = back    # Answer or definition
 
     def __str__(self):
@@ -19,3 +19,26 @@ class Card:
 
     def set_back(self, back):
         self.__back = back
+
+    @staticmethod
+    def validify(string):
+        return string.replace('\n', '¶').replace(':', '§')
+
+    @staticmethod
+    def restore(string):
+        return string.replace('¶', '\n').replace('§', ':')
+
+
+def main():
+    string = """1:i
+2:ii
+3:iii"""
+    print(string)
+    string = Card.validify(string)
+    print(string)
+    string = Card.restore(string)
+    print(string)
+
+
+if __name__ == '__main__':
+    main()

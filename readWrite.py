@@ -75,7 +75,7 @@ def purge():
         pass
 
 def main():
-    deleteFile("I'm watching you")
+    purge()
 
 if __name__ == '__main__':
     main()

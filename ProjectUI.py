@@ -16,6 +16,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 import readWrite
 from notes import Notes
+from deck import Deck
+from card import Card
 
 class Ui_MainWindow(object):
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
@@ -27,11 +29,27 @@ class Ui_MainWindow(object):
     # shows how many cards are in the current deck being edited
     CARDS_IN_DECK = 1
 
+    JOKES = [
+        ("A computer science major takes a shower.", "..."),
+        ("Why did the computer science major cross the road?", "To get to the other, um, byte or something."),
+        ("How many computer science majors does it take to screw a lightbulb?",
+         "None that I know of, but with the rise of AI girlfriends, I wouldn't put it past us."),
+        ("What do you call a software engineer with a good work-life balance?", "Unemployed."),
+        ("How does a computer science major run a marathon?", "./marathon.exe.")
+    ]
+
+    STUDY_SESSION_STATUS = "Begin"  # Begin, Front #, Back #, Joke Front #, Joke Back #
+
     def setupUi(self, MainWindow):
         defaultWindowWidth, defaultWindowHeight = 670,380
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(defaultWindowWidth, defaultWindowHeight)
         MainWindow.setMinimumSize(QtCore.QSize(int(defaultWindowWidth*0.75), int(defaultWindowHeight*0.75)))    # window minimum size
+
+        self.currentEditingDeck = Deck("Deck_ex.txt")
+        self.currentEditingDeck.add_card(Card("", ""))
+        self.currentStudyingDeck = Deck("Deck_ex.txt")
+        self.currentStudyingDeck.add_card(Card('', ''))
 
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setAutoFillBackground(True)
@@ -81,6 +99,8 @@ class Ui_MainWindow(object):
         self.deckSelectCE.setGeometry(QtCore.QRect(255, 5, 70, 25))
         self.deckSelectCE.setObjectName("deckSelectCE")
         self.deckSelectCE.addItem("")
+        self.deckSelectCE.currentIndexChanged.connect(self.card_editor_dropdown_changed)
+
 
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame_2.setGeometry(QtCore.QRect(550, 20, 100, 250))
@@ -243,10 +263,12 @@ class Ui_MainWindow(object):
         self.deckSelectSS.setObjectName("deckSelectSS")
         self.deckSelectSS.addItem("")
         self.horizontalLayout_3.addWidget(self.deckSelectSS)
+        self.populate_dropdown_ce()
 
         self.flipCardButton = QtWidgets.QPushButton(parent=self.studySessionTab)
         self.flipCardButton.setGeometry(QtCore.QRect(500, 200, 100, 50))
         self.flipCardButton.setObjectName("flipCardButton")
+        self.flipCardButton.clicked.connect(self.flip_card_pressed)
 
         self.flipCardButton.clicked.connect(self.testMethod)
 
@@ -299,12 +321,70 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.notesTab), _translate("MainWindow", "Notes"))
         self.currentSetLabel_2.setText(_translate("MainWindow", "Current set "))
         self.deckSelectSS.setItemText(0, _translate("MainWindow", "Deck_ex"))
-        self.flipCardButton.setText(_translate("MainWindow", "Flip card"))
+        self.flipCardButton.setText(_translate("MainWindow", "Begin"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
+    def card_editor_dropdown_changed(self):
+        try:
+            self.currentEditingDeck = Deck(f'{self.deckSelectCE.currentText()}.txt')
+            if len(self.currentEditingDeck) < 1:
+                self.currentEditingDeck.add_card(Card("", ""))
+            self.CURRENT_CARD_INDEX = 1
+            self.CARDS_IN_DECK = len(self.currentEditingDeck)
+            self.cardFrontText.setText(
+                f'{self.currentEditingDeck.get_title()}\n{self.currentEditingDeck.get_card(0).get_front()}'
+            )
+            self.cardBackText.setText(self.currentEditingDeck.get_card(0).get_back())
+            self.update_index_label()
+        except Exception as wtf:
+            print(wtf)
+
     def testMethod(self):
         print("JAAAAANK!")
+
+    def flip_card_pressed(self):
+        try:
+            if self.STUDY_SESSION_STATUS == "Begin":
+                self.currentStudyingDeck = Deck(f'{self.deckSelectSS.currentText()}.txt')
+                self.currentStudyingDeck.shuffle()
+                print(self.currentStudyingDeck)
+                self.currentNoteCardSS.setText(self.currentStudyingDeck.get_card(0).get_front())
+                self.flipCardButton.setText("Flip")
+                self.STUDY_SESSION_STATUS = "Front 0"
+            elif self.STUDY_SESSION_STATUS[:6] == "Front ":
+                current_index = int(self.STUDY_SESSION_STATUS[6:])
+                self.currentNoteCardSS.setText(self.currentStudyingDeck.get_card(current_index).get_back())
+                self.flipCardButton.setText("Next")
+                self.STUDY_SESSION_STATUS = f'Back {current_index}'
+            elif self.STUDY_SESSION_STATUS[:5] == "Back ":
+                current_index = int(self.STUDY_SESSION_STATUS[5:]) + 1
+                if current_index < len(self.currentStudyingDeck):
+                    self.currentNoteCardSS.setText(self.currentStudyingDeck.get_card(current_index).get_front())
+                    self.flipCardButton.setText("Flip")
+                    self.STUDY_SESSION_STATUS = f'Front {current_index}'
+                else:
+                    self.currentNoteCardSS.setText(self.JOKES[0][0])
+                    self.flipCardButton.setText("Flip")
+                    self.STUDY_SESSION_STATUS = f'Joke Front 0'
+            elif self.STUDY_SESSION_STATUS[:11] == 'Joke Front ':
+                current_index = int(self.STUDY_SESSION_STATUS[11:])
+                self.currentNoteCardSS.setText(self.JOKES[current_index][1])
+                self.flipCardButton.setText('Next')
+                self.STUDY_SESSION_STATUS = f'Joke Back {current_index}'
+
+            elif self.STUDY_SESSION_STATUS[:10] == f'Joke Back ':
+                current_index = int(self.STUDY_SESSION_STATUS[10:]) + 1
+                if current_index < len(self.JOKES):
+                    self.currentNoteCardSS.setText(self.JOKES[current_index][0])
+                    self.flipCardButton.setText('Flip')
+                    self.STUDY_SESSION_STATUS = f'Joke Front {current_index}'
+                else:
+                    self.flipCardButton.setText('Begin')
+                    self.STUDY_SESSION_STATUS = 'Begin'
+
+        except Exception as wtf:
+            print(wtf)
 
     def dropdown_changed(self):
         title = self.notesSelect.currentText()
@@ -339,18 +419,40 @@ class Ui_MainWindow(object):
         body = ''
         for i in range(len(body_lines)):
             body += f'{body_lines[i]}\n'
+        print(body.split('\n'))
         self.notesSelect.setItemText(self.notesSelect.currentIndex(), title)
         notes = Notes(title, body)
         notes.store()
 
     def save_card_button_clicked(self):
-        print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
-        print(self.cardFrontText.toPlainText()) # shows contents of front of card
-        print(self.cardBackText.toPlainText()) # shows contents of back of card
+        try:
+            print(self.deckSelectCE.currentText())  # this shows what deck user is currently on
+            print(self.cardFrontText.toPlainText())  # shows contents of front of card
+            print(self.cardBackText.toPlainText())  # shows contents of back of card
+
+            front = self.cardFrontText.toPlainText()
+            back = self.cardBackText.toPlainText()
+            if self.CURRENT_CARD_INDEX == 1:
+                title = front.split('\n')[0]
+                body_lines = front.split('\n')[1:]
+                body = ''
+                for i in range(len(body_lines)):
+                    body += f'{body_lines[i]}\n'
+                if len(title) >= 16:
+                    title = title[:16]
+                self.currentEditingDeck.set_title(title)
+                self.currentEditingDeck.set_card(0, body, back)
+            else:
+                self.currentEditingDeck.set_card(self.CURRENT_CARD_INDEX - 1, front, back)
+        except Exception as wtf:
+            print(wtf)
+
     def save_deck_button_clicked(self):
-        print(self.deckSelectCE.currentText()) # this shows what deck user is currently on
-        print(self.cardFrontText.toPlainText()) # shows contents of front of card
-        print(self.cardBackText.toPlainText()) # shows contents of back of card
+        print(self.deckSelectCE.currentText())  # this shows what deck user is currently on
+        print(self.cardFrontText.toPlainText())  # shows contents of front of card
+        print(self.cardBackText.toPlainText())  # shows contents of back of card
+        self.currentEditingDeck.store()
+        self.populate_dropdown_ce()
 
     #add a new item to the notes select dropdown box
     #allow user to change the name of document and switch between notes
@@ -377,6 +479,7 @@ class Ui_MainWindow(object):
         print(self.CARDS_IN_DECK)
         # label update
         self.update_index_label()
+        self.currentEditingDeck.add_card(Card("", ""))
 
     # this decrements the current card and loops around to the last card in the deck
     def back_button_clicked(self):
@@ -384,6 +487,11 @@ class Ui_MainWindow(object):
         self.CURRENT_CARD_INDEX -= 1
         if self.CURRENT_CARD_INDEX < 1:
             self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
+        card = self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1)
+        self.cardFrontText.setText(
+            f'{f'{self.currentEditingDeck.get_title()}\n' if self.CURRENT_CARD_INDEX == 1 else ''}{card.get_front()}'
+        )
+        self.cardBackText.setText(card.get_back())
         #label update
         self.update_index_label()
 
@@ -394,6 +502,11 @@ class Ui_MainWindow(object):
         self.CURRENT_CARD_INDEX += 1
         if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
             self.CURRENT_CARD_INDEX = 1
+        card = self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1)
+        self.cardFrontText.setText(
+            f'{f'{self.currentEditingDeck.get_title()}\n' if self.CURRENT_CARD_INDEX == 1 else ''}{card.get_front()}'
+        )
+        self.cardBackText.setText(card.get_back())
         #label update
         self.update_index_label()
 
@@ -405,15 +518,27 @@ class Ui_MainWindow(object):
             self.NOTE_DOCUMENT_INDEX -= 1
     def delete_deck_button_clicked(self):
         print("Deck deleted")
-        #self.deckSelectCE.removeItem()
+        self.currentEditingDeck.delete()
+        self.deckSelectCE.removeItem(self.deckSelectCE.currentIndex())
+        self.deckSelectSS.removeItem(self.deckSelectSS.currentIndex())
+        self.DECK_INDEX -= 1
     def delete_card_button_clicked(self):
-        print("Card deleted")
-        self.CARDS_IN_DECK -= 1
-        if self.CARDS_IN_DECK == 0:
-            self.CARDS_IN_DECK += 1
-        if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
-            self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
-        self.update_index_label()
+        try:
+            print("Card deleted")
+            self.currentEditingDeck.remove_card(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_front)
+            if len(self.currentEditingDeck) == 0:
+                self.currentEditingDeck.add_card(Card("", ""))
+            self.CARDS_IN_DECK -= 1
+            if self.CARDS_IN_DECK == 0:
+                self.CARDS_IN_DECK += 1
+            if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
+                self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
+            self.cardFrontText.setText(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_front())
+
+            self.cardBackText.setText(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_back())
+            self.update_index_label()
+        except Exception as wtf:
+            print(wtf)
 
     def populate_dropdown(self):
         readable_files = readWrite.getReadableFiles()
@@ -421,6 +546,24 @@ class Ui_MainWindow(object):
             self.NOTE_DOCUMENT_INDEX += 1
             self.notesSelect.addItem("")
             self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, readable_files[i][:-4])
+
+    def populate_dropdown_ce(self):
+        while self.DECK_INDEX > 1:
+            self.deckSelectCE.removeItem(1)
+            self.deckSelectSS.removeItem(1)
+            self.DECK_INDEX -= 1
+        readable_files = readWrite.getReadableFiles()
+        for i in range(len(readable_files)):
+            try:
+                Deck.readable_as_deck(readable_files[i])
+                print(readable_files[i])
+                self.DECK_INDEX += 1
+                self.deckSelectCE.addItem("")
+                self.deckSelectCE.setItemText(self.DECK_INDEX, readable_files[i][:-4])
+                self.deckSelectSS.addItem("")
+                self.deckSelectSS.setItemText(self.DECK_INDEX, readable_files[i][:-4])
+            except FileNotFoundError as wtf:
+                print(wtf)
 
 if __name__ == "__main__":
     import sys
@@ -430,3 +573,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec())
+

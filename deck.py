@@ -18,13 +18,15 @@ class Deck:
             # code below only executes if the title was successfully read as a text file
             self.__title = title[:-4]                        # i.e., the filename minus the extension
             for i in range(len(lines)):
+                print(lines[i].split(':'))
                 front, back = lines[i].split(":")            # convert each line of plain text to a card
-                card = card_class.Card(front, back)
+                card = card_class.Card(card_class.Card.restore(front), card_class.Card.restore(back))
                 self.add_card(card)
             print(f"Read a deck in existing deck {self.__title}.")
 
         # case 2: the user is making a new deck and passes the title they want it to have
-        except FileNotFoundError:
+        except FileNotFoundError as wtf:
+            print(wtf)
             if title[-4:] == '.txt':
                 self.__title = title[:-4]
             else:
@@ -38,7 +40,7 @@ class Deck:
         self.__cards.append(card)
 
     def remove_card(self, front_text):
-        self.__cards = [card for card in self.__cards if card.front != front_text]
+        self.__cards = [card for card in self.__cards if card.get_front() != front_text]
 
     def get_card(self, index):
         if 0 <= index < len(self.__cards):
@@ -83,12 +85,19 @@ class Deck:
         content = "can be read as a valid deck\n"                                   # str
         # each card becomes a line in the text file, front:back
         for i in range(len(self.__cards)):                                          # int
-            content += f"{self.__cards[i].get_front}:{self.__cards[i].get_back}"
+            content +=\
+                (f"{card_class.Card.validify(self.__cards[i].get_front())}:"
+                 f"{card_class.Card.validify(self.__cards[i].get_back())}\n")
         readWrite.writeToFile(content, f"{self.__title}.txt")
 
     def delete(self):
         readWrite.deleteFile(f"{self.__title}.txt")
 
+    def __str__(self):
+        result = ''
+        for i in range(len(self.__cards)):
+            result += f'{self.__cards[i].get_front()}:{self.__cards[i].get_back()}\n'
+        return result
 
 def main():
     deck = Deck("Math")
