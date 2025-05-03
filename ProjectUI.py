@@ -29,34 +29,38 @@ class Ui_MainWindow(object):
     # shows how many cards are in the current deck being edited
     CARDS_IN_DECK = 1
 
+    # after the user finishes a deck in the study session, these jokes will be played as flashcards
     JOKES = [
         ("A computer science major takes a shower.", "..."),
         ("Why did the computer science major cross the road?", "To get to the other, um, byte or something."),
-        ("How many computer science majors does it take to screw a lightbulb?",
-         "None that I know of, but with the rise of AI girlfriends, I wouldn't put it past us."),
         ("What do you call a software engineer with a good work-life balance?", "Unemployed."),
         ("How does a computer science major run a marathon?", "./marathon.exe.")
     ]
 
+    # the study session tab has a finite set of states, this variable keeps track of them
     STUDY_SESSION_STATUS = "Begin"  # Begin, Front #, Back #, Joke Front #, Joke Back #
 
     def setupUi(self, MainWindow):
+        #initialize the main window
         defaultWindowWidth, defaultWindowHeight = 670,380
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(defaultWindowWidth, defaultWindowHeight)
         MainWindow.setMinimumSize(QtCore.QSize(int(defaultWindowWidth*0.75), int(defaultWindowHeight*0.75)))    # window minimum size
 
+        # initialize the deck currently being edited by the user
         self.currentEditingDeck = Deck("Deck_ex.txt")
         self.currentEditingDeck.add_card(Card("", ""))
         self.currentStudyingDeck = Deck("Deck_ex.txt")
         self.currentStudyingDeck.add_card(Card('', ''))
 
+        # TODO John B, what does this do?
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setAutoFillBackground(True)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
 
+        # TODO: John B, what does this do?
         self.tabWidget = QtWidgets.QTabWidget(parent=self.centralwidget)
         self.tabWidget.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.TabPosition.North)
@@ -65,6 +69,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabBarAutoHide(False)
         self.tabWidget.setObjectName("tabWidget")
 
+        # TODO: John K, keep working on the comments
         self.cardEditTab = QtWidgets.QWidget()
         self.cardEditTab.setObjectName("cardEditTab")
 
