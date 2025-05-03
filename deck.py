@@ -100,14 +100,18 @@ class Deck:
             result += f'{self.__cards[i].get_front()}:{self.__cards[i].get_back()}\n'
         return result
 
+    def __contains__(self, item):
+        for i in range(len(self.__cards)):
+            if item == self.__cards[i]:
+                return True
+        return False
+
 def main():
     deck = Deck("Math")
-    deck.store()
-    deck = Deck("Math.txt")
-    deck.delete()
-    deck = Deck("Math.txt")
-    print(deck.get_title())
-
+    card = card_class.Card("2 + 2", 4)
+    print(card in deck)
+    deck.add_card(card)
+    print(card in deck)
 
 if __name__ == '__main__':
     main()

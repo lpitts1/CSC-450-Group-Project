@@ -53,14 +53,14 @@ class Ui_MainWindow(object):
         self.currentStudyingDeck = Deck("Deck_ex.txt")
         self.currentStudyingDeck.add_card(Card('', ''))
 
-        # TODO John B, what does this do?
+        # initialize the main canvas of the window
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setAutoFillBackground(True)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
 
-        # TODO: John B, what does this do?
+        # initialize the tab system
         self.tabWidget = QtWidgets.QTabWidget(parent=self.centralwidget)
         self.tabWidget.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.TabPosition.North)
@@ -69,10 +69,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabBarAutoHide(False)
         self.tabWidget.setObjectName("tabWidget")
 
-        # TODO: John K, keep working on the comments
+        # initialize the card edit tab
         self.cardEditTab = QtWidgets.QWidget()
         self.cardEditTab.setObjectName("cardEditTab")
 
+        # initialize the frame for the back and forward buttons o the card editor
         self.frame = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame.setGeometry(QtCore.QRect(195, 240, 170, 60))
         self.frame.setAutoFillBackground(False)
@@ -80,135 +81,153 @@ class Ui_MainWindow(object):
         self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
         self.frame.setObjectName("frame")
 
+        # initialize a horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.frame)
         self.horizontalLayout.setObjectName("horizontalLayout")
+
+        # initialize a back button
         self.backButton = QtWidgets.QPushButton(parent=self.frame)
         self.backButton.setObjectName("backButton")
         self.horizontalLayout.addWidget(self.backButton)
-
         self.backButton.clicked.connect(self.back_button_clicked)
 
+        # initialize the current card label
         self.deckIndex = QtWidgets.QLabel(parent=self.frame)
         self.deckIndex.setFrameShape(QtWidgets.QFrame.Shape.Box)
         self.deckIndex.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         self.deckIndex.setObjectName("deckIndex")
         self.horizontalLayout.addWidget(self.deckIndex)
 
+        # initialize the forward button
         self.forwardButton = QtWidgets.QPushButton(parent=self.frame)
         self.forwardButton.setObjectName("forwardButton")
         self.horizontalLayout.addWidget(self.forwardButton)
-
         self.forwardButton.clicked.connect(self.forward_button_clicked)
 
+        # initialize the deck selection dropdown in the card editor
         self.deckSelectCE = QtWidgets.QComboBox(parent=self.cardEditTab)
         self.deckSelectCE.setGeometry(QtCore.QRect(255, 5, 70, 25))
         self.deckSelectCE.setObjectName("deckSelectCE")
         self.deckSelectCE.addItem("")
         self.deckSelectCE.currentIndexChanged.connect(self.card_editor_dropdown_changed)
 
-
+        # initialize the frame for the new, save, delete, etc. buttons
         self.frame_2 = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame_2.setGeometry(QtCore.QRect(550, 20, 100, 250))
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_2.setObjectName("frame_2")
 
+        # initialize a vertical layout for the buttons frame
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame_2)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
+        # initialize a "New Deck" button
         self.newDeckCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newDeckCEButton.setObjectName("newDeckCEButton")
         self.verticalLayout_2.addWidget(self.newDeckCEButton)
-
         self.newDeckCEButton.clicked.connect(self.new_deck_button_clicked)
 
+        # initialize a "New Card" button
         self.newCardCEButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.newCardCEButton.setObjectName("newCardCEButton")
         self.verticalLayout_2.addWidget(self.newCardCEButton)
-
         self.newCardCEButton.clicked.connect(self.new_card_button_clicked)
 
+        # initialize a delete deck button
         self.deleteDeckButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.deleteDeckButton.setObjectName("deleteDeckButton")
         self.verticalLayout_2.addWidget(self.deleteDeckButton)
-        # delete deck button
         self.deleteDeckButton.clicked.connect(self.delete_deck_button_clicked)
 
+        #initialize a delete card button
         self.deleteCardButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.deleteCardButton.setObjectName("deleteCardButton")
         self.verticalLayout_2.addWidget(self.deleteCardButton)
-        # delete card button
         self.deleteCardButton.clicked.connect(self.delete_card_button_clicked)
 
-        # save card button card edit tab
+        # initialize a save card button
         self.saveCardButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.saveCardButton.setObjectName("saveCardButton")
         self.verticalLayout_2.addWidget(self.saveCardButton)
-
         self.saveCardButton.clicked.connect(self.save_card_button_clicked)
 
-        # save deck button card edit tab
+        # initialize a save deck button
         self.saveDeckButton = QtWidgets.QPushButton(parent=self.frame_2)
         self.saveDeckButton.setObjectName("saveDeckButton")
         self.verticalLayout_2.addWidget(self.saveDeckButton)
-
         self.saveDeckButton.clicked.connect(self.save_deck_button_clicked)
 
+        # initialize a frame for the card front and back editors
         self.frame_4 = QtWidgets.QFrame(parent=self.cardEditTab)
         self.frame_4.setGeometry(QtCore.QRect(15, 15, 530, 230))
         self.frame_4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_4.setObjectName("frame_4")
 
+        # initialize the card front editor
         self.cardFrontText = QtWidgets.QTextEdit(parent=self.frame_4)
         self.cardFrontText.setGeometry(QtCore.QRect(0, 20, 250, 210))
         self.cardFrontText.setObjectName("cardFrontText")
 
+        # initialize the card back editor
         self.cardBackText = QtWidgets.QTextEdit(parent=self.frame_4)
         self.cardBackText.setGeometry(QtCore.QRect(280, 20, 250, 210))
         self.cardBackText.setObjectName("cardBackText")
 
+        # initialize the front editor label
         self.frontLabel = QtWidgets.QLabel(parent=self.frame_4)
         self.frontLabel.setGeometry(QtCore.QRect(100, 0, 50, 20))
         self.frontLabel.setObjectName("frontLabel")
 
+        # initialize the back editor label
         self.backLabel = QtWidgets.QLabel(parent=self.frame_4)
         self.backLabel.setGeometry(QtCore.QRect(400, 0, 50, 20))
         self.backLabel.setObjectName("backLabel")
 
+        # add the card editor tab to the tab system
         self.tabWidget.addTab(self.cardEditTab, "")
 
+        # initialize the overview tab (which we did not end up using)
         self.overviewTab = QtWidgets.QWidget()
         self.overviewTab.setObjectName("overviewTab")
 
+        # initialize the overview tab main frame
         self.frame_5 = QtWidgets.QFrame(parent=self.overviewTab)
         self.frame_5.setGeometry(QtCore.QRect(230, 0, 141, 41))
         self.frame_5.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_5.setObjectName("frame_5")
 
+        # initialize a horizontal layout for the overview tab
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.frame_5)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
 
+        # initialize a label for the current deck
         self.currentSetLabel = QtWidgets.QLabel(parent=self.frame_5)
         self.currentSetLabel.setObjectName("currentSetLabel")
         self.horizontalLayout_2.addWidget(self.currentSetLabel)
 
+        # initialize a dropdown menu to select a card for the overview tab
         self.deckSelectOverview = QtWidgets.QComboBox(parent=self.frame_5)
         self.deckSelectOverview.setObjectName("deckSelectOverview")
         self.deckSelectOverview.addItem("")
         self.horizontalLayout_2.addWidget(self.deckSelectOverview)
 
+        # add the overview tab to the tab system
         self.tabWidget.addTab(self.overviewTab, "")
 
+        # initialize the notes tab
         self.notesTab = QtWidgets.QWidget()
         self.notesTab.setObjectName("notesTab")
 
+        # initialize a textbox to type notes
         self.notesText = QtWidgets.QTextEdit(parent=self.notesTab)
         self.notesText.setGeometry(QtCore.QRect(0, 0, int(defaultWindowWidth*.7), int(defaultWindowHeight*.75)))
         self.notesText.setLineWrapColumnOrWidth(0)
         self.notesText.setObjectName("notesText")
 
+        # initialize a frame for the file buttons
         self.frame_3 = QtWidgets.QFrame(parent=self.notesTab)
         self.frame_3.setGeometry(QtCore.QRect(510, 150, 150, 150))
         self.frame_3.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
@@ -217,80 +236,102 @@ class Ui_MainWindow(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.frame_3)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
 
+        # initialize a new document button
         self.newDocumentButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.newDocumentButton.setObjectName("newDocumentButton")
         self.verticalLayout_3.addWidget(self.newDocumentButton)
-        # new notes document button
         self.newDocumentButton.clicked.connect(self.new_document_button_clicked)
 
+        # initialize a delete document button
         self.deleteNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.deleteNotesButton.setObjectName("deleteNotesButton")
         self.verticalLayout_3.addWidget(self.deleteNotesButton)
-        # delete button for the notes tab
         self.deleteNotesButton.clicked.connect(self.delete_notes_button_clicked)
 
+        # initialize a save notes button
         self.saveNotesButton = QtWidgets.QPushButton(parent=self.frame_3)
         self.saveNotesButton.setObjectName("saveNotesButton")
         self.verticalLayout_3.addWidget(self.saveNotesButton)
-        # save button for the notes tab
         self.saveNotesButton.clicked.connect(self.notes_save_button_clicked)
 
+        # initialize a dropdown menu for selecting a notes document
         self.notesSelect = QtWidgets.QComboBox(parent=self.notesTab)
         self.notesSelect.setGeometry(QtCore.QRect(510, 0, 120, 25))
         self.notesSelect.setObjectName("notesSelect")
         self.notesSelect.addItem("")
-        self.tabWidget.addTab(self.notesTab, "")
         self.notesSelect.currentIndexChanged.connect(self.dropdown_changed)
         self.populate_dropdown()
 
+        # add the notes tab to the tab system
+        self.tabWidget.addTab(self.notesTab, "")
+
+        # initialize a study session tab
         self.studySessionTab = QtWidgets.QWidget()
         self.studySessionTab.setObjectName("studySessionTab")
 
+        # initialize the display of the study session tab
         self.currentNoteCardSS = QtWidgets.QTextEdit(parent=self.studySessionTab)
         self.currentNoteCardSS.setGeometry(QtCore.QRect(190, 40, 250, 210))
         self.currentNoteCardSS.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.NoTextInteraction)
         self.currentNoteCardSS.setObjectName("currentNoteCardSS")
 
-
+        # initialize a frame for the deck selection dropdown menu
         self.frame_6 = QtWidgets.QFrame(parent=self.studySessionTab)
         self.frame_6.setGeometry(QtCore.QRect(240, 0, 141, 41))
         self.frame_6.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_6.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_6.setObjectName("frame_6")
 
+        # initializing a horizontal layout for the dropdown menu
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.frame_6)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.currentSetLabel_2 = QtWidgets.QLabel(parent=self.frame_6)
         self.currentSetLabel_2.setObjectName("currentSetLabel_2")
         self.horizontalLayout_3.addWidget(self.currentSetLabel_2)
 
+        # initialize a dropdown menu to select a deck
         self.deckSelectSS = QtWidgets.QComboBox(parent=self.frame_6)
         self.deckSelectSS.setObjectName("deckSelectSS")
         self.deckSelectSS.addItem("")
         self.horizontalLayout_3.addWidget(self.deckSelectSS)
         self.populate_dropdown_ce()
 
+        # initialize a button to begin, flip the current card, and move onto the next card
         self.flipCardButton = QtWidgets.QPushButton(parent=self.studySessionTab)
         self.flipCardButton.setGeometry(QtCore.QRect(500, 200, 100, 50))
         self.flipCardButton.setObjectName("flipCardButton")
         self.flipCardButton.clicked.connect(self.flip_card_pressed)
-
         self.flipCardButton.clicked.connect(self.testMethod)
 
+        # add the study session tab to the tab system
         self.tabWidget.addTab(self.studySessionTab, "")
+
+        # adding the tab system
         self.verticalLayout.addWidget(self.tabWidget)
 
+        # implement the main canvas
         MainWindow.setCentralWidget(self.centralwidget)
+
+        # initialize a menu bar toward the top of the screen
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 20))
         self.menubar.setObjectName("menubar")
+
+
+        # initialize a setting button, which we have not had time to implement yet
         self.menuSettings = QtWidgets.QMenu(parent=self.menubar)
         self.menuSettings.setObjectName("menuSettings")
+
+        # associate the settings button with the menu bar
+        self.menubar.addAction(self.menuSettings.menuAction())
+
+        # place the menu bar on the main window
         MainWindow.setMenuBar(self.menubar)
+
+        # add a status bar
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.menubar.addAction(self.menuSettings.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(3)
@@ -299,7 +340,11 @@ class Ui_MainWindow(object):
         self.secondary_window = None
 
     def retranslateUi(self, MainWindow):
-
+        """
+        Adjust all elements of the UI as needed for cross compatibility
+        :param MainWindow: window to be re-translated
+        :return: nothing
+        """
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.backButton.setText(_translate("MainWindow", "<--"))
@@ -331,70 +376,148 @@ class Ui_MainWindow(object):
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
     def card_editor_dropdown_changed(self):
+        """
+        When a deck is selected using the dropdown menu in the card editor tab, the following happens.
+        :return: nothing
+        """
         try:
+            # find a deck file with a filename equal to the text in the current dropdown item
             self.currentEditingDeck = Deck(f'{self.deckSelectCE.currentText()}.txt')
+
+            # if that deck is empty, or I could not find a deck, add one blank card to the deck.
             if len(self.currentEditingDeck) < 1:
                 self.currentEditingDeck.add_card(Card("", ""))
+
+            # flip back to the first card in the deck
             self.CURRENT_CARD_INDEX = 1
+
+            # remember that we have however many cards there are in this deck
             self.CARDS_IN_DECK = len(self.currentEditingDeck)
+
+            # populate the front textbox with the title of the deck and the contents of the front of the first card
             self.cardFrontText.setText(
                 f'{self.currentEditingDeck.get_title()}\n{self.currentEditingDeck.get_card(0).get_front()}'
             )
+
+            # populate the back textbox with the contents of the back of the first card
             self.cardBackText.setText(self.currentEditingDeck.get_card(0).get_back())
+
+            # update the label at the bottom of the screen with appropriate current card and total number of cards
             self.update_index_label()
+
         except Exception as wtf:
+            # print out any exception that occurs since this does not happen in PyQt by default
             print(wtf)
 
     def testMethod(self):
-        print("JAAAAANK!")
+        """
+        A test method we used to test different phenomena in the app
+        :return: nothing
+        """
+        pass
 
     def flip_card_pressed(self):
+        """
+        The study session tab only has one button that executes one of the following blocks based on the state it is in.
+        :return:
+        """
         try:
+            # the user has selected a deck and is ready to begin studying
             if self.STUDY_SESSION_STATUS == "Begin":
+                # find the deck selected in the dropdown menu, read it in, and shuffle it
                 self.currentStudyingDeck = Deck(f'{self.deckSelectSS.currentText()}.txt')
                 self.currentStudyingDeck.shuffle()
                 print(self.currentStudyingDeck)
+
+                # show the front of the first card of the selected deck, have the button say "Flip"
                 self.currentNoteCardSS.setText(self.currentStudyingDeck.get_card(0).get_front())
                 self.flipCardButton.setText("Flip")
+
+                # we are now looking at the front of the first card
                 self.STUDY_SESSION_STATUS = "Front 0"
+
+            # the user has read the front of a card and is now ready to flip to the back
             elif self.STUDY_SESSION_STATUS[:6] == "Front ":
+                # read the index of the current card
                 current_index = int(self.STUDY_SESSION_STATUS[6:])
+
+                # display the text on the back of that card and make the button say "Next"
                 self.currentNoteCardSS.setText(self.currentStudyingDeck.get_card(current_index).get_back())
                 self.flipCardButton.setText("Next")
+
+                # we are now looking at the back of the same card
                 self.STUDY_SESSION_STATUS = f'Back {current_index}'
+
+            # the user has read the back of a card and is ready to move onto the next card or finish the deck
             elif self.STUDY_SESSION_STATUS[:5] == "Back ":
+                # increment the index of the current card
                 current_index = int(self.STUDY_SESSION_STATUS[5:]) + 1
+
+                # still cards remaining --> look at the front of the next card
                 if current_index < len(self.currentStudyingDeck):
+
+                    # display the front text of the next card and make the button say "Flip"
                     self.currentNoteCardSS.setText(self.currentStudyingDeck.get_card(current_index).get_front())
                     self.flipCardButton.setText("Flip")
+
+                    # we are now looking at the front of the next card
                     self.STUDY_SESSION_STATUS = f'Front {current_index}'
+
+                # finished the deck --> move onto the joke "deck"   *not an actual deck; it's a list[tuple[str]]*
                 else:
+                    # display the front of the first joke card and make the button say "Flip"
                     self.currentNoteCardSS.setText(self.JOKES[0][0])
                     self.flipCardButton.setText("Flip")
+
+                    # we are now looking at the front of the first joke "card"
                     self.STUDY_SESSION_STATUS = f'Joke Front 0'
+
+            # we have read the front of a joke "card" and are ready to read the back
             elif self.STUDY_SESSION_STATUS[:11] == 'Joke Front ':
+                # read in the current index of the joke "deck"
                 current_index = int(self.STUDY_SESSION_STATUS[11:])
+
+                # display the back text of the current joke "card" and make the button say "Next"
                 self.currentNoteCardSS.setText(self.JOKES[current_index][1])
                 self.flipCardButton.setText('Next')
+
+                # we are now looking at the back of the same joke "card"
                 self.STUDY_SESSION_STATUS = f'Joke Back {current_index}'
 
+            # we have read the back of a joke "card" and can read the front of the next one or end the study session
             elif self.STUDY_SESSION_STATUS[:10] == f'Joke Back ':
+                # increment the index of the current card
                 current_index = int(self.STUDY_SESSION_STATUS[10:]) + 1
+
+                # we have not finished the joke "deck" and want to see the front of the next "card"
                 if current_index < len(self.JOKES):
+                    # display the front of the next joke "card"
                     self.currentNoteCardSS.setText(self.JOKES[current_index][0])
                     self.flipCardButton.setText('Flip')
+
+                    # we are now looking at the front of the next joke "card"
                     self.STUDY_SESSION_STATUS = f'Joke Front {current_index}'
+
+                # we have finished the joke "deck" and are ready to end the study session or start a new one
                 else:
                     self.flipCardButton.setText('Begin')
+
+                    # we are now ready to begin another study session if we want
                     self.STUDY_SESSION_STATUS = 'Begin'
 
         except Exception as wtf:
             print(wtf)
 
     def dropdown_changed(self):
-        title = self.notesSelect.currentText()
+        """
+        When the dropdown menu in the notes tab is changed, the following happens.
+        :return: nothing
+        """
+        title = self.notesSelect.currentText()  # store the text of the current dropdown item
         try:
-            notes = Notes(f'{title}')
+            notes = Notes(f'{title}')   # try to read in a Notes file with that name
+
+            # set the text in the notes textbox equal to the
             self.notesText.setText(f'{title}\n{notes.get_body()}')
         except FileNotFoundError:
             print("Well fiddle my diddles")
