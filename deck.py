@@ -18,10 +18,11 @@ class Deck:
             # code below only executes if the title was successfully read as a text file
             self.__title = title[:-4]                        # i.e., the filename minus the extension
             for i in range(len(lines)):
-                print(lines[i].split(':'))
-                front, back = lines[i].split(":")            # convert each line of plain text to a card
-                card = card_class.Card(card_class.Card.restore(front), card_class.Card.restore(back))
-                self.add_card(card)
+                if lines[i] != '\n':
+                    print(lines[i].split(':'))
+                    front, back = lines[i].split(":")            # convert each line of plain text to a card
+                    card = card_class.Card(card_class.Card.restore(front), card_class.Card.restore(back))
+                    self.add_card(card)
             print(f"Read a deck in existing deck {self.__title}.")
 
         # case 2: the user is making a new deck and passes the title they want it to have

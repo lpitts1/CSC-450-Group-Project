@@ -44,11 +44,12 @@ class Notes:
         """
         lines = self.__body.split("\n")
         for line in lines:
-            front_back = line.split(":")
+            if line != '':
+                front_back = line.split(":")
 
-            # a text file can only be read as a deck if each line has a colon
-            if len(front_back) != 2:
-                return False
+                # a text file can only be read as a deck if each line has a colon
+                if len(front_back) != 2:
+                    return False
         return True
 
     def store(self):

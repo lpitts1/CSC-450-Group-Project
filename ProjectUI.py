@@ -423,6 +423,7 @@ class Ui_MainWindow(object):
         self.notesSelect.setItemText(self.notesSelect.currentIndex(), title)
         notes = Notes(title, body)
         notes.store()
+        self.populate_dropdown_ce()
 
     def save_card_button_clicked(self):
         try:
