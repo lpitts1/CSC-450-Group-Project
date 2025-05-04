@@ -7,6 +7,9 @@ import readWrite
 
 
 class Notes:
+    """
+    A class composed of a title, and a body string, with functionality to read from and write to textfiles.
+    """
     def __init__(self, title, body="LOAD"):
         """
         Constructor.
@@ -64,13 +67,17 @@ class Notes:
         return self.__body
 
     def delete(self):
+        """
+        Deletes the file.
+        :return: nothing
+        """
         readWrite.deleteFile(f"{self.__title}.txt")
 
 
 def main():
-    notes = Notes("notes_example")
-    print(notes)
-
+    s0 = 's0'
+    n = Notes(s0)
+    print(n.get_title(), n.get_body())
 
 if __name__ == '__main__':
     main()

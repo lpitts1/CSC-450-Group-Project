@@ -1,9 +1,16 @@
+# Preston Zuniga, John Keenan
+# CSC450-002
+# Professor Devon Simmonds
+
 import random                    # made random global
 import card as card_class
 import readWrite
 
 
 class Deck:
+    """
+    A list of cards with functionality to read and write to a textfile.
+    """
     def __init__(self, title="Untitled Deck"):
         """
         :param title: if it has a .txt extension, tries to read in a file of that name, otherwise makes a new deck
@@ -35,35 +42,78 @@ class Deck:
             print(f"Instantiated a new deck {self.__title}.")
 
     def __len__(self):
+        """
+        Gives the deck class a length attribute.
+        :return: the number of cards in the deck
+        """
         return len(self.__cards)
 
     def add_card(self, card):
+        """
+        Adds a card.
+        :param card: Card to add.
+        :return: Nothing.
+        """
         self.__cards.append(card)
 
     def remove_card(self, front_text):
+        """
+        Removes cards.
+        :param front_text: the front text of the cards you want to remove
+        :return:
+        """
         self.__cards = [card for card in self.__cards if card.get_front() != front_text]
 
     def get_card(self, index):
+        """
+        Accessor.
+        :param index: Index of the card.
+        :return: The requested card.
+        """
         if 0 <= index < len(self.__cards):
             return self.__cards[index]
         return None
 
     def shuffle(self):
+        """
+        Shuffles the deck.
+        :return: nothing
+        """
         random.shuffle(self.__cards)
 
     def list_cards(self):
+        """
+        Prints out all cards in the deck.
+        :return: nothing
+        """
         for i, card in enumerate(self.__cards):
             print(f"{i + 1}. {card.get_front()} | {card.get_back()}")
 
     # added a set cards method
     def set_card(self, index, front, back):
+        """
+        Set the content of a card.
+        :param index: index of card to change
+        :param front: new front
+        :param back: new back
+        :return: nothing
+        """
         self.__cards[index].set_front(front)
         self.__cards[index].set_back(back)
 
     def get_title(self):
+        """
+        Accessor.
+        :return: Current title.
+        """
         return self.__title
 
     def set_title(self, title):
+        """
+        Mutator.
+        :param title: New title.
+        :return: nothing.
+        """
         self.__title = title
 
     # static method to see if a text file can be read as a deck
@@ -92,23 +142,35 @@ class Deck:
         readWrite.writeToFile(content, f"{self.__title}.txt")
 
     def delete(self):
+        """
+        Deletes the deck.
+        :return: nothing
+        """
         readWrite.deleteFile(f"{self.__title}.txt")
 
     def __str__(self):
+        """
+        To string function.
+        :return: returns the object as it would look like in a textfile
+        """
         result = ''
         for i in range(len(self.__cards)):
             result += f'{self.__cards[i].get_front()}:{self.__cards[i].get_back()}\n'
         return result
 
     def __contains__(self, item):
+        """
+        Overloads the 'in' operator.
+        :param item: Card in or not in the deck
+        :return:
+        """
         return item in self.__cards
 
 def main():
-    deck = Deck("Math")
-    card = card_class.Card("2 + 2", 4)
-    print(card in deck)
+    deck = Deck("test")
+    card = card_class.Card(1, 2)
     deck.add_card(card)
-    print(card in deck)
+    deck.store()
 
 if __name__ == '__main__':
     main()

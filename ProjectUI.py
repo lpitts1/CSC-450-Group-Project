@@ -19,7 +19,11 @@ from notes import Notes
 from deck import Deck
 from card import Card
 
+
 class Ui_MainWindow(object):
+    """
+    A UI class that implements the card, deck, notes, and readwrite class.
+    """
     # used in new_document_button_clicked() method to keep track of how many new notes have been added
     NOTE_DOCUMENT_INDEX = 0
     # increments for each deck created, used by new_deck_button_clicked()
@@ -42,10 +46,11 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         #initialize the main window
-        defaultWindowWidth, defaultWindowHeight = 670,380
+        defaultWindowWidth, defaultWindowHeight = 670, 380
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(defaultWindowWidth, defaultWindowHeight)
-        MainWindow.setMinimumSize(QtCore.QSize(int(defaultWindowWidth*0.75), int(defaultWindowHeight*0.75)))    # window minimum size
+        MainWindow.setMinimumSize(
+            QtCore.QSize(int(defaultWindowWidth * 0.75), int(defaultWindowHeight * 0.75)))  # window minimum size
 
         # initialize the deck currently being edited by the user
         self.currentEditingDeck = Deck("Deck_ex.txt")
@@ -223,7 +228,7 @@ class Ui_MainWindow(object):
 
         # initialize a textbox to type notes
         self.notesText = QtWidgets.QTextEdit(parent=self.notesTab)
-        self.notesText.setGeometry(QtCore.QRect(0, 0, int(defaultWindowWidth*.7), int(defaultWindowHeight*.75)))
+        self.notesText.setGeometry(QtCore.QRect(0, 0, int(defaultWindowWidth * .7), int(defaultWindowHeight * .75)))
         self.notesText.setLineWrapColumnOrWidth(0)
         self.notesText.setObjectName("notesText")
 
@@ -317,7 +322,6 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 20))
         self.menubar.setObjectName("menubar")
 
-
         # initialize a setting button, which we have not had time to implement yet
         self.menuSettings = QtWidgets.QMenu(parent=self.menubar)
         self.menuSettings.setObjectName("menuSettings")
@@ -333,10 +337,12 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        # re-translate the UI, start on the fourth tab by default
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        # we were originally planning on having a popup window, but decided against it
         self.secondary_window = None
 
     def retranslateUi(self, MainWindow):
@@ -348,7 +354,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.backButton.setText(_translate("MainWindow", "<--"))
-        self.deckIndex.setText(_translate("MainWindow", str(self.CURRENT_CARD_INDEX)+"/"+str(self.CARDS_IN_DECK)))
+        self.deckIndex.setText(_translate("MainWindow", str(self.CURRENT_CARD_INDEX) + "/" + str(self.CARDS_IN_DECK)))
         self.forwardButton.setText(_translate("MainWindow", "-->"))
         self.deckSelectCE.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.newDeckCEButton.setText(_translate("MainWindow", "+New Deck"))
@@ -372,7 +378,8 @@ class Ui_MainWindow(object):
         self.currentSetLabel_2.setText(_translate("MainWindow", "Current set "))
         self.deckSelectSS.setItemText(0, _translate("MainWindow", "Deck_ex"))
         self.flipCardButton.setText(_translate("MainWindow", "Begin"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab), _translate("MainWindow", "Study Session"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.studySessionTab),
+                                  _translate("MainWindow", "Study Session"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
 
     def card_editor_dropdown_changed(self):
@@ -515,13 +522,12 @@ class Ui_MainWindow(object):
         """
         title = self.notesSelect.currentText()  # store the text of the current dropdown item
         try:
-            notes = Notes(f'{title}')   # try to read in a Notes file with that name
+            notes = Notes(f'{title}')  # try to read in a Notes file with that name
 
             # set the text in the notes textbox equal to the
             self.notesText.setText(f'{title}\n{notes.get_body()}')
         except FileNotFoundError:
             print("Well fiddle my diddles")
-
 
     def update_index_label(self):
         """
@@ -530,12 +536,19 @@ class Ui_MainWindow(object):
         """
         self.deckIndex.setText(str(self.CURRENT_CARD_INDEX) + "/" + str(self.CARDS_IN_DECK))
 
-    # save the contents of the notes text field (notesText)
     def notes_save_button_clicked(self):
+        """
+        save the contents of the notes text field (notesText)
+        :return:
+        """
         print(self.notesSelect.currentText())  # this shows what notes document user is currently on
         print(self.notesText.toPlainText())  # shows contents of notes document
+
+        # if the textbox is not empty, the title should be the first line fo the textbox
         if len(self.notesText.toPlainText()) > 0:
             title = self.notesText.toPlainText().split('\n')[0]
+
+        # otherwise, it should be empty#
         else:
             i = 0
             while True:
@@ -544,26 +557,42 @@ class Ui_MainWindow(object):
                     i += 1
                 else:
                     break
+        # we do not want the filename to be too long
         if len(title) > 16:
             title = title[:16]
+
+        # everything after the first line constitutes the body
         body_lines = self.notesText.toPlainText().split('\n')[1:]
         body = ''
         for i in range(len(body_lines)):
             body += f'{body_lines[i]}\n'
         print(body.split('\n'))
+
+        # change the text of the current dropdown item accordingly
         self.notesSelect.setItemText(self.notesSelect.currentIndex(), title)
+
+        # save the notes using the Notes object
         notes = Notes(title, body)
         notes.store()
+
+        # update the card editor and study session dropdowns
         self.populate_dropdown_ce()
 
     def save_card_button_clicked(self):
+        """
+        save the card to the current index of the deck object
+        :return:
+        """
         try:
             print(self.deckSelectCE.currentText())  # this shows what deck user is currently on
             print(self.cardFrontText.toPlainText())  # shows contents of front of card
             print(self.cardBackText.toPlainText())  # shows contents of back of card
 
+            # content of the front and back textboxes
             front = self.cardFrontText.toPlainText()
             back = self.cardBackText.toPlainText()
+
+            # if the card is the first card, make the first line of the front the title of the deck
             if self.CURRENT_CARD_INDEX == 1:
                 title = front.split('\n')[0]
                 body_lines = front.split('\n')[1:]
@@ -580,56 +609,85 @@ class Ui_MainWindow(object):
             print(wtf)
 
     def save_deck_button_clicked(self):
+        """
+        Save the entire deck to a file.
+        :return:
+        """
         print(self.deckSelectCE.currentText())  # this shows what deck user is currently on
         print(self.cardFrontText.toPlainText())  # shows contents of front of card
         print(self.cardBackText.toPlainText())  # shows contents of back of card
         self.currentEditingDeck.store()
         self.populate_dropdown_ce()
 
-    #add a new item to the notes select dropdown box
-    #allow user to change the name of document and switch between notes
+    # add a new item to the notes select dropdown box
     def new_document_button_clicked(self):
-        self.NOTE_DOCUMENT_INDEX += 1 #increments by 1 for each new document added
+        """
+        Add a new item to the notes select dropdown box
+        :return: nothing
+        """
+        self.NOTE_DOCUMENT_INDEX += 1  # increments by 1 for each new document added
         self.notesSelect.addItem("")
-        #self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, str(NotesPopupWindow.TITLE_TEXT)) #sets drop down index and example title
-        self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_"+str(self.NOTE_DOCUMENT_INDEX))
+        # the secondary window we did not end up using
+        # self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, str(NotesPopupWindow.TITLE_TEXT))
+        self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, "notes_" + str(self.NOTE_DOCUMENT_INDEX))
+
     def new_deck_button_clicked(self):
-        self.DECK_INDEX += 1 #increments by 1 for each new deck added
+        """
+        Add a new deck to the deck selection dropdown menus.
+        :return: nothing
+        """
+        self.DECK_INDEX += 1  # increments by 1 for each new deck added
+
         self.deckSelectCE.addItem("")
-        self.deckSelectCE.setItemText(self.DECK_INDEX, "deck_"+str(self.DECK_INDEX)) #sets drop down index and example title
+        self.deckSelectCE.setItemText(self.DECK_INDEX,
+                                      "deck_" + str(self.DECK_INDEX))  #sets drop down index and example title
 
         self.deckSelectSS.addItem("")
-        self.deckSelectSS.setItemText(self.DECK_INDEX, "deck_"+str(self.DECK_INDEX))
+        self.deckSelectSS.setItemText(self.DECK_INDEX, "deck_" + str(self.DECK_INDEX))
 
         self.deckSelectOverview.addItem("")
-        self.deckSelectOverview.setItemText(self.DECK_INDEX, "deck_"+str(self.DECK_INDEX))
+        self.deckSelectOverview.setItemText(self.DECK_INDEX, "deck_" + str(self.DECK_INDEX))
 
     # this method increments the number of cards in a deck and updates the label
     def new_card_button_clicked(self):
+        """
+        Add a new card to switch between.
+        :return: nothing
+        """
         print("saved card")
         self.CARDS_IN_DECK += 1
         print(self.CARDS_IN_DECK)
         # label update
         self.update_index_label()
+
+        # add a card to the Deck object
         self.currentEditingDeck.add_card(Card("", ""))
 
-    # this decrements the current card and loops around to the last card in the deck
     def back_button_clicked(self):
+        """
+        this decrements the current card and loops around to the last card in the deck
+        :return: nothing
+        """
         print("back")
         self.CURRENT_CARD_INDEX -= 1
         if self.CURRENT_CARD_INDEX < 1:
             self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
+
+        # echo the contents of the next card in the textboxes
         card = self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1)
         self.cardFrontText.setText(
+            # if the card is the first card, also add the title of th deck to the front textbox
             f'{f'{self.currentEditingDeck.get_title()}\n' if self.CURRENT_CARD_INDEX == 1 else ''}{card.get_front()}'
         )
         self.cardBackText.setText(card.get_back())
-        #label update
+        # label update
         self.update_index_label()
 
-    # this increments the current card and loops around to the first card in the deck
-    # this increments the current card and loops around to the first card in the deck
     def forward_button_clicked(self):
+        """
+        this increments the current card and loops around to the first card in the deck
+        :return: nothing
+        """
         print("forward")
         self.CURRENT_CARD_INDEX += 1
         if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
@@ -643,36 +701,69 @@ class Ui_MainWindow(object):
         self.update_index_label()
 
     def delete_notes_button_clicked(self):
+        """
+        Delete the current notes document
+        :return: nothing
+        """
+        # only delete if a note document exists
         if self.NOTE_DOCUMENT_INDEX > 0:
+            # delete the file, remove the item from the dropdown, and decrement the current number of note documents
             readWrite.deleteFile(f'{self.notesSelect.currentText()}.txt')
             self.notesSelect.removeItem(self.notesSelect.currentIndex())
             print("Notes deleted")
             self.NOTE_DOCUMENT_INDEX -= 1
+
     def delete_deck_button_clicked(self):
+        """
+        Delete the current deck
+        :return: nothing
+        """
         print("Deck deleted")
         self.currentEditingDeck.delete()
+
+        # remove the item from both relevant dropdowns
         self.deckSelectCE.removeItem(self.deckSelectCE.currentIndex())
         self.deckSelectSS.removeItem(self.deckSelectSS.currentIndex())
         self.DECK_INDEX -= 1
+
     def delete_card_button_clicked(self):
+        """
+        Delete the current card.
+        :return: nothing
+        """
         try:
             print("Card deleted")
-            self.currentEditingDeck.remove_card(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_front)
+
+            # delete from the deck object
+            self.currentEditingDeck.remove_card(
+                self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_front()
+            )
+
+            # add a blank card if there are no longer any cards in the deck
             if len(self.currentEditingDeck) == 0:
                 self.currentEditingDeck.add_card(Card("", ""))
             self.CARDS_IN_DECK -= 1
+
+            # make sure the official number of cards in the deck never falls below one
             if self.CARDS_IN_DECK == 0:
                 self.CARDS_IN_DECK += 1
+
+            # make sure the current card index never falls below the number of cards in the deck
             if self.CURRENT_CARD_INDEX > self.CARDS_IN_DECK:
                 self.CURRENT_CARD_INDEX = self.CARDS_IN_DECK
-            self.cardFrontText.setText(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_front())
 
+            # set the textboxes appropriately
+            self.cardFrontText.setText(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_front())
             self.cardBackText.setText(self.currentEditingDeck.get_card(self.CURRENT_CARD_INDEX - 1).get_back())
             self.update_index_label()
         except Exception as wtf:
             print(wtf)
 
     def populate_dropdown(self):
+        """
+        Populate the notes dropdown with all readable files
+        :return:
+        """
         readable_files = readWrite.getReadableFiles()
         for i in range(len(readable_files)):
             self.NOTE_DOCUMENT_INDEX += 1
@@ -680,10 +771,16 @@ class Ui_MainWindow(object):
             self.notesSelect.setItemText(self.NOTE_DOCUMENT_INDEX, readable_files[i][:-4])
 
     def populate_dropdown_ce(self):
+        """
+        Populate both the card editor and study session dropdowns with all readable textfiles
+        :return:
+        """
+        # remove everything currently in there except the example deck
         while self.DECK_INDEX > 1:
             self.deckSelectCE.removeItem(1)
             self.deckSelectSS.removeItem(1)
             self.DECK_INDEX -= 1
+
         readable_files = readWrite.getReadableFiles()
         for i in range(len(readable_files)):
             try:
@@ -697,12 +794,13 @@ class Ui_MainWindow(object):
             except FileNotFoundError as wtf:
                 print(wtf)
 
+
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec())
-
