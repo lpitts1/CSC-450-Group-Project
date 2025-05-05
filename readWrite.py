@@ -34,18 +34,18 @@ def readByLine(fileName):
     return lineList
 
 # Create file function with desired file name
-def newFile(fileName):
-    """
-    Creates a new file to be used later.
-    :param fileName: include .txt extension.
-    :return: Nothing.
-    """
-    try:                        # Creates a file with exception handling
-        f = open(fileName, "x") # Open file in X mode, opens file in write mode but throws
-        registerFile(fileName)
-        f.close()               # FileExistsError if file name already exists
-    except FileExistsError:     # Throw excpetion
-        print("File already exists.")
+# def newFile(fileName):
+#     """
+#     Creates a new file to be used later.
+#     :param fileName: include .txt extension.
+#     :return: Nothing.
+#     """
+#     try:                        # Creates a file with exception handling
+#         f = open(fileName, "x")  # Open file in X mode, opens file in write mode but throws
+#         registerFile(fileName)
+#         f.close()               # FileExistsError if file name already exists
+#     except FileExistsError:     # Throw exception
+#         print("File already exists.")
 
 # Write to file function, takes in fileName and input arguments
 def writeToFile(input, fileName):
@@ -124,8 +124,10 @@ def purge():
     with open("readable_files.txt", "w") as bye_bye:
         pass
 
+
 def main():
-    purge()
+    print(readByLine('2'))
+
 
 if __name__ == '__main__':
     main()
