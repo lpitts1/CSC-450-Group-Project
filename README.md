@@ -1,6 +1,6 @@
 # CSC-450-Group-Project
 ## Requirements
-- Windows with Python 3.14.2 or later and Git on PATH, or
+- Windows 11 or later with Python 3.14.2 or later and Git on PATH, or
 - Ubuntu 24.04 or later
 ## Setup
 ### Windows
