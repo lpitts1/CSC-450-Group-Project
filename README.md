@@ -16,5 +16,5 @@ python3 -m venv flashcards
 flashcards/bin/pip install PyQt6
 ```
 ## Use
-- Windows: `\path\to\flashcards\Sscripts\python ProjectUI.py`
-- Linux: `/path/to/flashcards/bin/python ProjectUI.py`
+- Windows: `\path\to\flashcards\Sscripts\python \path\to\flashcards\ProjectUI.py`
+- Linux: `/path/to/flashcards/bin/python /path/to/flashcardsProjectUI.py`
