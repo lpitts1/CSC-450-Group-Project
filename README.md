@@ -7,7 +7,7 @@
 ```
 git clone https://github.com/lpitts1/CSC-450-Group-Project.git flashcards
 python3 -m venv flashcards
-flashcards\Scripts\pip install PyQt6
+.\flashcards\Scripts\pip install PyQt6
 ```
 ### Linux
 ```
