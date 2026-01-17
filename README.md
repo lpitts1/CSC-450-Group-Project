@@ -6,8 +6,8 @@
 ### Windows
 ```
 git clone https://github.com/lpitts1/CSC-450-Group-Project.git flashcards
-python3 -m venv flashcards
-.\flashcards\Scripts\pip install PyQt6
+py -m venv flashcards
+.\flashcards\Scripts\pip.exe install PyQt6
 ```
 ### Linux
 ```
@@ -19,7 +19,7 @@ flashcards/bin/pip install PyQt6
 ### Windows
 ```
 cd \path\to\flashcards
-.\Scripts\python ProjectUI.py
+.\Scripts\python.exe ProjectUI.py
 ```
 ### Linux
 ```
