@@ -42,11 +42,12 @@ Use the dropdown menu to switch between decks. +New Deck adds a new deck to the 
 > [!CAUTION]
 > You must click Save Card before switching cards or before saving the deck! Otherwise, your changes will NOT be retained! To avoid data loss, click Save Card and Save Deck before switching the dropdown menu, switching tabs, or closing the app!
 
-Notes files typed in the format above will be interpreted as follows.
-> Front		Back
-> Problem 1	Solution 1
-> Problem 2	Solution 2
-> Problem 3	Solution 3
+Notes files typed in the format above will be interpreted as follows:
+> Front: Problem 1 | Back: Solution 1
+> 
+> Front: Problem 2 | Back: Solution 2
+> 
+> Front: Problem 3 | Solution 3
 ### Study Session
 Use the dropdown to select a flashcards file previously made using Card Edit or Notes. Click begin to begin clicking through the fronts and backs one my one. After clicking through all the flashcards, you will be shown five joke flashcards as a reward. You will then have the option to begin a different deck or the same one.
 
