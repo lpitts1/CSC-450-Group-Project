@@ -27,4 +27,4 @@ cd /path/to/flashcards
 bin/python ProjectUI.py
 ```
 ### Notes
-Use the dropdown menu to switch between documents. +New Document adds a new document to the dropdown. -Delete Document deletes the current document from the dropdown menu and the file system. Save adds the current document to the file system. The first line of text is the file name.
+Use the dropdown menu to switch between documents. +New Document adds a new document to the dropdown. -Delete Document deletes the current document from the dropdown menu and the file system. Save adds the current document to the file system. The first line of text is the file name. *Caution:* 
