@@ -33,7 +33,9 @@ Use the dropdown menu to switch between documents. +New Document adds a new docu
 
 Notes files in the following format can also be read as flashcards documents:
 > Problem 1:Solution 1
+> 
 > Problem 2:Solution 2
+> 
 > Problem 3:Solution 3
 ### Card Edit
 Use the dropdown menu to switch between decks. +New Deck adds a new deck to the dropdown menu. +New Card adds a new card to the current deck. -Delete Deck deletes the current deck from the dropdown and the file system. -Delete Card deletes the current card from the current deck. Save Card adds the current card to the current deck (**not the file system**). Save Deck saves the current deck to the file system.
